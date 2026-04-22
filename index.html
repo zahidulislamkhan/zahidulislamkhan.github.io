@@ -1535,27 +1535,43 @@
         </p>
 
         <!-- Drawing showcase grid — add your own images here -->
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:1rem;">
-          <!-- Placeholder 1 -->
-          <div style="background:var(--bg2);border:1px dashed rgba(232,160,32,0.3);border-radius:8px;aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="12" r="6" stroke="#E8A020" stroke-width="1" opacity="0.5"/><path d="M6 28c0-5.523 4.477-10 10-10s10 4.477 10 10" stroke="#E8A020" stroke-width="1" opacity="0.5" stroke-linecap="round"/></svg>
-            <span style="font-family:var(--mono);font-size:8px;color:var(--muted2);text-align:center;letter-spacing:0.06em;">add portrait here<br>replace with &lt;img&gt;</span>
+        <div style="position:relative;margin-top:1rem;">
+          <!-- Carousel track -->
+          <div id="drawing-carousel" style="display:flex;gap:14px;overflow:hidden;border-radius:10px;">
+            <div class="drawing-slide" style="flex:0 0 calc(33.33% - 10px);">
+              <img src="assets/draw-1.jpg" alt="Drawing 1"
+                   style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;display:block;">
+            </div>
+            <div class="drawing-slide" style="flex:0 0 calc(33.33% - 10px);">
+              <img src="assets/draw-2.jpg" alt="Drawing 2"
+                   style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;display:block;">
+            </div>
+            <div class="drawing-slide" style="flex:0 0 calc(33.33% - 10px);">
+              <img src="assets/draw-3.jpg" alt="Drawing 3"
+                   style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;display:block;">
+            </div>
+            <!-- Add more slides here — just copy a drawing-slide div above -->
           </div>
-          <!-- Placeholder 2 -->
-          <div style="background:var(--bg2);border:1px dashed rgba(232,160,32,0.3);border-radius:8px;aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M6 26l5-8 4 5 3-3 8 6" stroke="#E8A020" stroke-width="1" opacity="0.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="4" width="24" height="24" rx="4" stroke="#E8A020" stroke-width="1" opacity="0.3"/></svg>
-            <span style="font-family:var(--mono);font-size:8px;color:var(--muted2);text-align:center;letter-spacing:0.06em;">add caricature here<br>replace with &lt;img&gt;</span>
-          </div>
-          <!-- Placeholder 3 -->
-          <div style="background:var(--bg2);border:1px dashed rgba(232,160,32,0.3);border-radius:8px;aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M8 20 Q12 8 16 16 Q20 24 24 12" stroke="#E8A020" stroke-width="1" opacity="0.5" stroke-linecap="round" fill="none"/><circle cx="8" cy="20" r="2" fill="#E8A020" opacity="0.4"/></svg>
-            <span style="font-family:var(--mono);font-size:8px;color:var(--muted2);text-align:center;letter-spacing:0.06em;">add doodle here<br>replace with &lt;img&gt;</span>
-          </div>
+        
+          <!-- Prev / Next buttons -->
+          <button onclick="moveCarousel(-1)"
+                  style="position:absolute;left:-16px;top:50%;transform:translateY(-50%);
+                         background:var(--bg2);border:1px solid var(--border2);border-radius:50%;
+                         width:32px;height:32px;color:var(--purple);font-size:16px;
+                         cursor:pointer;display:flex;align-items:center;justify-content:center;">‹</button>
+          <button onclick="moveCarousel(1)"
+                  style="position:absolute;right:-16px;top:50%;transform:translateY(-50%);
+                         background:var(--bg2);border:1px solid var(--border2);border-radius:50%;
+                         width:32px;height:32px;color:var(--purple);font-size:16px;
+                         cursor:pointer;display:flex;align-items:center;justify-content:center;">›</button>
+        
+          <!-- Dot indicators -->
+          <div id="carousel-dots" style="display:flex;justify-content:center;gap:6px;margin-top:12px;"></div>
         </div>
+        
         <p style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:10px;letter-spacing:0.05em;">
-          // to add your drawings: save as assets/draw-1.jpg, draw-2.jpg, draw-3.jpg and replace the placeholder divs with &lt;img&gt; tags
+          // add more drawings: save as assets/draw-4.jpg etc. and copy a drawing-slide div above
         </p>
-      </div>
     </section>
 
     <!-- CONTACT -->
@@ -1701,6 +1717,39 @@
     const style = document.createElement('style');
     style.textContent = `.nav-links a.active { color: var(--purple); } .nav-links a.active::before { opacity: 1; }`;
     document.head.appendChild(style);
+    // Drawing carousel
+    const carousel = document.getElementById('drawing-carousel');
+    const dotsEl   = document.getElementById('carousel-dots');
+    const slides    = document.querySelectorAll('.drawing-slide');
+    let current     = 0;
+    
+    function buildDots() {
+      slides.forEach((_, i) => {
+        const d = document.createElement('div');
+        d.style.cssText = `width:6px;height:6px;border-radius:50%;background:var(--border2);
+                           transition:background 0.2s;cursor:pointer;`;
+        d.onclick = () => goTo(i);
+        dotsEl.appendChild(d);
+      });
+      updateDots();
+    }
+    
+    function updateDots() {
+      dotsEl.querySelectorAll('div').forEach((d, i) => {
+        d.style.background = i === current ? 'var(--purple)' : 'var(--border2)';
+      });
+    }
+    
+    function goTo(index) {
+      current = (index + slides.length) % slides.length;
+      const slideW = slides[0].offsetWidth + 14;
+      carousel.scrollTo({ left: current * slideW, behavior: 'smooth' });
+      updateDots();
+    }
+    
+    function moveCarousel(dir) { goTo(current + dir); }
+    
+    if (carousel && slides.length) buildDots();
   </script>
 
 </body>
