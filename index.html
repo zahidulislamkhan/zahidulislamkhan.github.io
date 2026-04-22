@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zahidul Islam Khan — Epidemiologist & Data Scientist</title>
+  <meta name="description" content="Zahidul Islam Khan — MSc Epidemiology and Biomedical Data Science, University of Oulu. Researcher in biostatistics, public health, and machine learning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0C0C14;
+      --bg2:      #13131F;
+      --bg3:      #1A1A2E;
+      --border:   rgba(255,255,255,0.07);
+      --border2:  rgba(255,255,255,0.12);
+      --purple:   #7C6EFA;
+      --purple2:  #9D92FB;
+      --purple3:  rgba(124,110,250,0.12);
+      --purple4:  rgba(124,110,250,0.06);
+      --text:     #F0EEF8;
+      --muted:    #6E6D82;
+      --muted2:   #9A99AE;
+      --green:    #4FC9A4;
+      --mono:     'IBM Plex Mono', monospace;
+      --serif:    'Fraunces', serif;
+      --sans:     'Outfit', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    /* ── Grid lines ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+      z-index: 0;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 40%, transparent 100%);
+      opacity: 0.5;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(12,12,20,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .nav-logo span { color: var(--purple); }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a::before {
+      content: '//';
+      margin-right: 4px;
+      color: var(--purple);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::before { opacity: 1; }
+
+    /* ── LAYOUT ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 clamp(1.5rem, 5vw, 4rem);
+    }
+
+    section {
+      padding: 6rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-child { border-bottom: none; }
+
+    .section-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--purple);
+      letter-spacing: 0.14em;
+      text-transform: lowercase;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-tag::before { content: '01'; color: var(--muted); margin-right: 2px; }
+    #about    .section-tag::before { content: '02'; }
+    #research .section-tag::before { content: '03'; }
+    #experience .section-tag::before { content: '04'; }
+    #contact  .section-tag::before { content: '05'; }
+
+    .section-tag::after {
+      content: '';
+      height: 1px;
+      width: 40px;
+      background: var(--border2);
+    }
+
+    /* ── HERO ── */
+    #hero {
+      padding-top: 7rem;
+      padding-bottom: 6rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-photo-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .hero-photo-frame {
+      position: relative;
+      width: 160px;
+      height: 160px;
+      flex-shrink: 0;
+    }
+
+    .hero-photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1.5px solid transparent;
+      border-top-color: var(--purple);
+      border-bottom-color: var(--purple2);
+      animation: spin 10s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .hero-photo-frame img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      display: block;
+      object-fit: cover;
+      object-position: center top;
+      border: 3px solid var(--bg);
+      background: var(--bg3);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-photo-placeholder {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--serif);
+      font-size: 2.8rem;
+      color: var(--purple2);
+      font-style: italic;
+      border: 3px solid var(--bg);
+      background: var(--bg3);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-photo-caption {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-eyebrow span {
+      color: var(--green);
+      animation: blink 1.2s step-end infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--purple2);
+    }
+
+    .hero-bio {
+      font-size: 15px;
+      color: var(--muted2);
+      max-width: 520px;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--purple);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover { background: var(--purple2); transform: translateY(-1px); }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--muted2);
+      padding: 10px 22px;
+      border-radius: 6px;
+      border: 1px solid var(--border2);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    }
+
+    .btn-ghost:hover { border-color: var(--purple); color: var(--text); transform: translateY(-1px); }
+
+    .hero-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      min-width: 160px;
+    }
+
+    .hero-stat {
+      background: var(--bg2);
+      padding: 16px 20px;
+    }
+
+    .hero-stat-n {
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    .hero-stat-n span { color: var(--purple); font-size: 18px; }
+
+    .hero-stat-l {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: lowercase;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 300;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    h2 em { font-style: italic; color: var(--purple2); }
+
+    p {
+      font-size: 15px;
+      color: var(--muted2);
+      line-height: 1.85;
+      margin-bottom: 1rem;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .skill-item {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      transition: border-color 0.2s;
+    }
+
+    .skill-item:hover { border-color: var(--purple); }
+
+    .skill-item-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--purple);
+      letter-spacing: 0.06em;
+      margin-bottom: 3px;
+    }
+
+    .skill-item-val {
+      font-size: 12px;
+      color: var(--muted2);
+    }
+
+    /* ── RESEARCH TIMELINE ── */
+    .pub-timeline {
+      position: relative;
+      padding-left: 48px;
+      margin-top: 1rem;
+    }
+
+    .pub-timeline::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 12px;
+      bottom: 12px;
+      width: 1px;
+      background: linear-gradient(to bottom,
+        transparent 0%, var(--border2) 8%,
+        var(--border2) 92%, transparent 100%
+      );
+    }
+
+    .pub-entry {
+      position: relative;
+      padding: 0 0 2.5rem 1.5rem;
+    }
+
+    .pub-entry:last-child { padding-bottom: 0; }
+
+    .pub-entry::before {
+      content: '';
+      position: absolute;
+      left: -40px;
+      top: 6px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--purple);
+      z-index: 1;
+      transition: background 0.25s;
+    }
+
+    .pub-entry:hover::before { background: var(--purple); }
+
+    .pub-entry::after {
+      content: '';
+      position: absolute;
+      left: -31px;
+      top: 10px;
+      width: 31px;
+      height: 1px;
+      background: var(--border2);
+    }
+
+    .pub-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s, background 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .pub-card:hover { border-color: var(--border2); background: var(--bg3); }
+
+    .pub-card-body {
+      padding: 18px 20px 14px;
+    }
+
+    .pub-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .pub-year-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--purple2);
+      background: var(--purple3);
+      border: 1px solid rgba(124,110,250,0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+
+    .pub-title {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.55;
+      margin-bottom: 8px;
+      font-weight: 400;
+    }
+
+    .pub-meta {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .pub-journal {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+
+    .pub-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--purple3);
+      color: var(--purple2);
+      letter-spacing: 0.04em;
+    }
+
+    /* Citation bar */
+    .pub-cit {
+      border-top: 1px solid var(--border);
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pub-cit-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      min-width: 72px;
+    }
+
+    .pub-cit-bar-wrap {
+      flex: 1;
+      height: 4px;
+      background: var(--border2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .pub-cit-bar {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--purple);
+      width: 0;
+      transition: width 1s ease 0.3s;
+    }
+
+    .pub-cit-count {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--purple2);
+      min-width: 28px;
+      text-align: right;
+    }
+
+    /* Citation chart summary */
+    .cit-chart-wrap {
+      margin-top: 2.5rem;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+    }
+
+    .cit-chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 16px;
+    }
+
+    .cit-chart-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: lowercase;
+    }
+
+    .cit-chart-total {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--purple2);
+    }
+
+    .cit-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 60px;
+    }
+
+    .cit-bar-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+
+    .cit-bar-fill {
+      width: 100%;
+      background: var(--purple);
+      border-radius: 2px 2px 0 0;
+      opacity: 0.7;
+      min-height: 2px;
+      transition: opacity 0.2s;
+    }
+
+    .cit-bar-fill:hover { opacity: 1; }
+
+    .cit-bar-year {
+      font-family: var(--mono);
+      font-size: 8px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .research-interests {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 2.5rem;
+    }
+
+    .interest-tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border2);
+      color: var(--muted2);
+      letter-spacing: 0.04em;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .interest-tag:hover { border-color: var(--purple); color: var(--purple2); }
+
+    /* ── EXPERIENCE TIMELINE ── */
+    .timeline {
+      position: relative;
+      padding-left: 48px;
+      margin-top: 1rem;
+    }
+
+    /* Central vertical line */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 16px;
+      top: 12px;
+      bottom: 12px;
+      width: 1px;
+      background: linear-gradient(to bottom,
+        transparent 0%,
+        var(--border2) 8%,
+        var(--border2) 92%,
+        transparent 100%
+      );
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 0 0 3rem 1.5rem;
+    }
+
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    /* Node circle on the line */
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -40px;
+      top: 4px;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--purple);
+      transition: background 0.3s;
+      z-index: 1;
+    }
+
+    .timeline-item:hover::before {
+      background: var(--purple);
+    }
+
+    /* Connector from node to card */
+    .timeline-item::after {
+      content: '';
+      position: absolute;
+      left: -29px;
+      top: 9px;
+      width: 29px;
+      height: 1px;
+      background: var(--border2);
+    }
+
+    .timeline-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      transition: border-color 0.25s, background 0.25s;
+    }
+
+    .timeline-item:hover .timeline-card {
+      border-color: var(--border2);
+      background: var(--bg3);
+    }
+
+    .timeline-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .timeline-badge {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: lowercase;
+      padding: 3px 9px;
+      border-radius: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .timeline-badge.edu {
+      background: var(--purple3);
+      color: var(--purple2);
+      border: 1px solid rgba(124,110,250,0.25);
+    }
+
+    .timeline-badge.work {
+      background: rgba(79,201,164,0.1);
+      color: #4FC9A4;
+      border: 1px solid rgba(79,201,164,0.25);
+    }
+
+    .timeline-date {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .timeline-date::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--muted);
+      opacity: 0.4;
+    }
+
+    .timeline-role {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 4px;
+      line-height: 1.35;
+    }
+
+    .timeline-org {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--purple);
+      margin-bottom: 10px;
+      letter-spacing: 0.03em;
+    }
+
+    .timeline-desc {
+      font-size: 13px;
+      color: var(--muted2);
+      line-height: 1.75;
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+    }
+
+    /* ── CONTACT ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .contact-links { display: flex; flex-direction: column; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+
+    .contact-link {
+      background: var(--bg2);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: var(--muted2);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.03em;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .contact-link:hover { background: var(--bg3); color: var(--text); }
+
+    .contact-link-label { display: flex; align-items: center; gap: 10px; }
+
+    .contact-link-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--purple3);
+      border: 1px solid var(--purple);
+    }
+
+    .contact-link-arrow { color: var(--muted); font-size: 14px; transition: transform 0.2s, color 0.2s; }
+    .contact-link:hover .contact-link-arrow { transform: translateX(3px); color: var(--purple); }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 2rem clamp(1.5rem, 5vw, 4rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-left {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .footer-left span { color: var(--purple); }
+
+    .footer-right {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── FADE-IN ANIMATIONS ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      #hero { grid-template-columns: 1fr; justify-items: center; }
+      .hero-photo-col { order: -1; }
+      .hero-stats { flex-direction: row; flex-wrap: wrap; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .pub-timeline { padding-left: 28px; }
+      .pub-timeline::before { left: 8px; }
+      .pub-entry::before { left: -24px; }
+      .pub-entry::after { left: -13px; width: 13px; }
+      .timeline { padding-left: 28px; }
+      .timeline::before { left: 8px; }
+      .timeline-item::before { left: -24px; }
+      .timeline-item::after { left: -13px; width: 13px; }
+      .nav-links { gap: 16px; }
+      h1 { font-size: 2.8rem; }
+    }
+
+    @media (max-width: 520px) {
+      .nav-links li:not(:last-child) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">zahidul<span>.</span>khan</div>
+    <ul class="nav-links">
+      <li><a href="#hero">home</a></li>
+      <li><a href="#about">about</a></li>
+      <li><a href="#research">research</a></li>
+      <li><a href="#experience">experience</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="page">
+
+    <!-- HERO -->
+    <section id="hero">
+
+      <div class="hero-photo-col">
+        <div class="hero-photo-frame">
+          <!-- Replace the placeholder below with: <img src="assets/photo.jpg" alt="Zahidul Islam Khan"> -->
+          <div class="hero-photo-placeholder">ZK</div>
+        </div>
+        <div class="hero-photo-caption">
+          Zahidul Islam Khan<br>Oulu, Finland
+        </div>
+      </div>
+
+      <div>
+        <div class="hero-eyebrow">// epidemiologist &amp; data scientist <span>▊</span></div>
+        <h1>
+          Zahidul<br>
+          Islam <em>Khan</em>
+        </h1>
+        <p class="hero-bio">
+          I study population health through the lens of statistics and machine learning —
+          from maternal outcomes in Bangladesh to hypertension across South Asia.
+          Currently pursuing my MSc at the University of Oulu, Finland.
+        </p>
+        <div class="hero-actions">
+          <a href="#research" class="btn-primary">View research →</a>
+          <a href="assets/cv.pdf" class="btn-ghost" target="_blank">Download CV</a>
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-n">6<span>+</span></div>
+          <div class="hero-stat-l">publications</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-n">2</div>
+          <div class="hero-stat-l">conference talks</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-n">3<span>+</span></div>
+          <div class="hero-stat-l">years experience</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-n" style="font-size:16px; padding-top:6px">Oulu<span style="font-size:12px">, FI</span></div>
+          <div class="hero-stat-l">based in</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="section-tag">about</div>
+      <div class="about-grid">
+        <div class="fade-in">
+          <h2>Bridging statistics<br>and <em>public health</em></h2>
+          <p>
+            I'm a statistician and data scientist with a background in applied research
+            across South and South-East Asia. Before coming to Finland, I worked as a
+            Data Management Officer at <strong style="color:var(--text);font-weight:400">icddr,b</strong> — one of the world's leading global
+            health research institutes — where I managed data for HIV and AIDS
+            programmes under the Health Systems and Population Studies Division.
+          </p>
+          <p>
+            My research sits at the intersection of biostatistics, epidemiology, and
+            machine learning. I'm particularly drawn to questions about maternal and
+            child health, infectious disease, and health inequalities — and to the
+            statistical methodologies that can illuminate them.
+          </p>
+          <p>
+            I hold a BSc in Statistics from Khulna University (2020) and am currently
+            pursuing my MSc in Epidemiology and Biomedical Data Science at the
+            University of Oulu.
+          </p>
+        </div>
+        <div class="fade-in">
+          <div class="skills-grid">
+            <div class="skill-item">
+              <div class="skill-item-label">methods</div>
+              <div class="skill-item-val">Quantile regression</div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-item-label">methods</div>
+              <div class="skill-item-val">Decomposition analysis</div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-item-label">tools</div>
+              <div class="skill-item-val">R · Python</div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-item-label">tools</div>
+              <div class="skill-item-val">SPSS · Stata</div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-item-label">domain</div>
+              <div class="skill-item-val">Maternal health</div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-item-label">domain</div>
+              <div class="skill-item-val">Infectious disease</div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-item-label">ml</div>
+              <div class="skill-item-val">Classification models</div>
+            </div>
+            <div class="skill-item">
+              <div class="skill-item-label">data</div>
+              <div class="skill-item-val">DHS · survey data</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESEARCH -->
+    <section id="research">
+      <div class="section-tag">research</div>
+      <h2>Published <em>work</em></h2>
+
+      <div class="pub-timeline fade-in">
+
+        <div class="pub-entry">
+          <a href="https://doi.org/10.1038/s41371-023-00879-x" class="pub-card" target="_blank" rel="noopener">
+            <div class="pub-card-body">
+              <div class="pub-card-header">
+                <div class="pub-title">Prevalence and determinants of hypertension in South-Asian urban communities: findings from Demographic and Health Surveys data</div>
+                <span class="pub-year-badge">2024</span>
+              </div>
+              <div class="pub-meta">
+                <span class="pub-journal">Journal of Human Hypertension</span>
+                <span class="pub-tag">hypertension</span>
+                <span class="pub-tag">South Asia</span>
+              </div>
+            </div>
+            <div class="pub-cit">
+              <span class="pub-cit-label">// citations</span>
+              <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="40"></div></div>
+              <span class="pub-cit-count">8</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="pub-entry">
+          <a href="https://doi.org/10.1186/s12905-023-02701-9" class="pub-card" target="_blank" rel="noopener">
+            <div class="pub-card-body">
+              <div class="pub-card-header">
+                <div class="pub-title">A comparative study of machine learning algorithms for predicting domestic violence vulnerability in Liberian women</div>
+                <span class="pub-year-badge">2023</span>
+              </div>
+              <div class="pub-meta">
+                <span class="pub-journal">BMC Women's Health</span>
+                <span class="pub-tag">machine learning</span>
+                <span class="pub-tag">GBV</span>
+              </div>
+            </div>
+            <div class="pub-cit">
+              <span class="pub-cit-label">// citations</span>
+              <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="30"></div></div>
+              <span class="pub-cit-count">6</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="pub-entry">
+          <a href="https://doi.org/10.1016/j.heliyon.2023.e16434" class="pub-card" target="_blank" rel="noopener">
+            <div class="pub-card-body">
+              <div class="pub-card-header">
+                <div class="pub-title">Implementation of jute-based nose holder in surgical masks to reduce plastic contamination</div>
+                <span class="pub-year-badge">2023</span>
+              </div>
+              <div class="pub-meta">
+                <span class="pub-journal">Heliyon</span>
+                <span class="pub-tag">sustainability</span>
+              </div>
+            </div>
+            <div class="pub-cit">
+              <span class="pub-cit-label">// citations</span>
+              <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="15"></div></div>
+              <span class="pub-cit-count">3</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="pub-entry">
+          <a href="https://doi.org/10.1136/bmjopen-2022-065674" class="pub-card" target="_blank" rel="noopener">
+            <div class="pub-card-body">
+              <div class="pub-card-header">
+                <div class="pub-title">Trends and patterns of inequalities in using facility delivery among reproductive-age women in Bangladesh: a decomposition analysis</div>
+                <span class="pub-year-badge">2022</span>
+              </div>
+              <div class="pub-meta">
+                <span class="pub-journal">BMJ Open</span>
+                <span class="pub-tag">maternal health</span>
+                <span class="pub-tag">Bangladesh</span>
+              </div>
+            </div>
+            <div class="pub-cit">
+              <span class="pub-cit-label">// citations</span>
+              <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="55"></div></div>
+              <span class="pub-cit-count">11</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="pub-entry">
+          <a href="https://doi.org/10.1016/j.cegh.2021.100948" class="pub-card" target="_blank" rel="noopener">
+            <div class="pub-card-body">
+              <div class="pub-card-header">
+                <div class="pub-title">Risk factors associated with anemia among women of reproductive age (15–49) in Albania: a quantile regression analysis</div>
+                <span class="pub-year-badge">2022</span>
+              </div>
+              <div class="pub-meta">
+                <span class="pub-journal">Clinical Epidemiology and Global Health</span>
+                <span class="pub-tag">anemia</span>
+                <span class="pub-tag">quantile regression</span>
+              </div>
+            </div>
+            <div class="pub-cit">
+              <span class="pub-cit-label">// citations</span>
+              <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="25"></div></div>
+              <span class="pub-cit-count">5</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="pub-entry">
+          <a href="https://doi.org/10.1016/j.heliyon.2021.e06547" class="pub-card" target="_blank" rel="noopener">
+            <div class="pub-card-body">
+              <div class="pub-card-header">
+                <div class="pub-title">Factors associated with age of mother at first birth in Albania: application of quantile regression model</div>
+                <span class="pub-year-badge">2021</span>
+              </div>
+              <div class="pub-meta">
+                <span class="pub-journal">Heliyon</span>
+                <span class="pub-tag">reproductive health</span>
+                <span class="pub-tag">Albania</span>
+              </div>
+            </div>
+            <div class="pub-cit">
+              <span class="pub-cit-label">// citations</span>
+              <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="10"></div></div>
+              <span class="pub-cit-count">2</span>
+            </div>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Citations per year chart -->
+      <div class="cit-chart-wrap fade-in">
+        <div class="cit-chart-header">
+          <span class="cit-chart-title">// citations by year</span>
+          <span class="cit-chart-total">35 total · Google Scholar</span>
+        </div>
+        <div class="cit-bars" id="cit-bars">
+          <!-- Bars rendered by JS below -->
+        </div>
+        <div style="margin-top:8px;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.06em;">
+          update citation counts above and in the script to match your Google Scholar profile
+        </div>
+      </div>
+
+      <div class="research-interests fade-in">
+        <span class="interest-tag">biostatistics</span>
+        <span class="interest-tag">longitudinal data</span>
+        <span class="interest-tag">public health</span>
+        <span class="interest-tag">maternal &amp; child health</span>
+        <span class="interest-tag">machine learning</span>
+        <span class="interest-tag">health informatics</span>
+        <span class="interest-tag">infectious disease</span>
+        <span class="interest-tag">DHS data</span>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <div class="section-tag">experience</div>
+      <h2>Background &amp; <em>education</em></h2>
+
+      <div class="timeline">
+
+        <div class="timeline-item fade-in">
+          <div class="timeline-card">
+            <div class="timeline-card-header">
+              <div>
+                <div class="timeline-date">2024 – present</div>
+                <div class="timeline-role">MSc — Epidemiology and Biomedical Data Science</div>
+                <div class="timeline-org">University of Oulu · Oulu, Finland</div>
+              </div>
+              <span class="timeline-badge edu">education</span>
+            </div>
+            <div class="timeline-desc">Specialising in biostatistics, longitudinal data analysis, and epidemiological methods. Research focus on population health and health data science.</div>
+          </div>
+        </div>
+
+        <div class="timeline-item fade-in">
+          <div class="timeline-card">
+            <div class="timeline-card-header">
+              <div>
+                <div class="timeline-date">2022 – 2023</div>
+                <div class="timeline-role">Data Management Officer</div>
+                <div class="timeline-org">icddr,b · Dhaka, Bangladesh</div>
+              </div>
+              <span class="timeline-badge work">work</span>
+            </div>
+            <div class="timeline-desc">Managed data infrastructure for HIV and AIDS research programmes under the Health Systems and Population Studies Division. Worked on data quality, cleaning, and analysis pipelines for large-scale health surveys.</div>
+          </div>
+        </div>
+
+        <div class="timeline-item fade-in">
+          <div class="timeline-card">
+            <div class="timeline-card-header">
+              <div>
+                <div class="timeline-date">2021 – 2022</div>
+                <div class="timeline-role">Data Analyst</div>
+                <div class="timeline-org">TwinBit Limited · Bangladesh</div>
+              </div>
+              <span class="timeline-badge work">work</span>
+            </div>
+            <div class="timeline-desc">Data analysis and reporting for an iOS software development company. Built dashboards and analytical reports to support product decisions.</div>
+          </div>
+        </div>
+
+        <div class="timeline-item fade-in">
+          <div class="timeline-card">
+            <div class="timeline-card-header">
+              <div>
+                <div class="timeline-date">2016 – 2020</div>
+                <div class="timeline-role">BSc in Statistics</div>
+                <div class="timeline-org">Khulna University · Khulna, Bangladesh</div>
+              </div>
+              <span class="timeline-badge edu">education</span>
+            </div>
+            <div class="timeline-desc">Undergraduate research in biostatistics and applied statistics. Thesis work on maternal and child health using national survey data.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="section-tag">contact</div>
+      <div class="contact-grid">
+        <div class="fade-in">
+          <h2>Open to <em>collaboration</em></h2>
+          <p>
+            I'm always interested in collaborative research involving statistical
+            methodologies, public health, or biomedical data science. Feel free to
+            reach out via email or find me on any of the platforms below.
+          </p>
+          <p style="font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 1.5rem;">
+            // best reached by email
+          </p>
+        </div>
+        <div class="fade-in">
+          <div class="contact-links">
+            <a href="mailto:zkhan24@student.oulu.fi" class="contact-link">
+              <span class="contact-link-label">
+                <span class="contact-link-dot"></span>
+                zkhan24@student.oulu.fi
+              </span>
+              <span class="contact-link-arrow">→</span>
+            </a>
+            <a href="https://www.linkedin.com/in/zahidulislamkhan/" class="contact-link" target="_blank" rel="noopener">
+              <span class="contact-link-label">
+                <span class="contact-link-dot"></span>
+                LinkedIn
+              </span>
+              <span class="contact-link-arrow">→</span>
+            </a>
+            <a href="https://scholar.google.com/citations?user=i-5w_I4AAAAJ" class="contact-link" target="_blank" rel="noopener">
+              <span class="contact-link-label">
+                <span class="contact-link-dot"></span>
+                Google Scholar
+              </span>
+              <span class="contact-link-arrow">→</span>
+            </a>
+            <a href="https://www.researchgate.net/profile/Zahidul-Islam-Khan" class="contact-link" target="_blank" rel="noopener">
+              <span class="contact-link-label">
+                <span class="contact-link-dot"></span>
+                ResearchGate
+              </span>
+              <span class="contact-link-arrow">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">zahidul<span>.</span>khan — <span>2025</span></div>
+    <div class="footer-right">built with html · css · js</div>
+  </footer>
+
+  <script>
+    // Intersection observer for fade-in animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Animate citation bars when they scroll into view
+    const barObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.pub-cit-bar').forEach(bar => {
+            bar.style.width = bar.dataset.pct + '%';
+          });
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.pub-timeline').forEach(el => barObserver.observe(el));
+
+    // Render citations-per-year bar chart
+    // UPDATE THESE to match your Google Scholar profile
+    const citsByYear = {
+      2021: 2,
+      2022: 6,
+      2023: 12,
+      2024: 15,
+    };
+
+    const maxCit = Math.max(...Object.values(citsByYear));
+    const chartEl = document.getElementById('cit-bars');
+    if (chartEl) {
+      Object.entries(citsByYear).forEach(([year, count]) => {
+        const pct = Math.round((count / maxCit) * 100);
+        const col = document.createElement('div');
+        col.className = 'cit-bar-col';
+        col.innerHTML = `
+          <div class="cit-bar-fill" style="height:0;transition:height 1s ease 0.5s" data-h="${pct}%" title="${count} citations in ${year}"></div>
+          <div class="cit-bar-year">${year}</div>
+        `;
+        chartEl.appendChild(col);
+      });
+
+      const chartObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.querySelectorAll('.cit-bar-fill').forEach(bar => {
+              bar.style.height = bar.dataset.h;
+            });
+            chartObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+
+      chartObserver.observe(chartEl);
+    }
+
+    // Active nav link on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+
+    const navObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(a => a.classList.remove('active'));
+          const active = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+          if (active) active.classList.add('active');
+        }
+      });
+    }, { threshold: 0.4 });
+
+    sections.forEach(s => navObserver.observe(s));
+
+    // Nav link active style
+    const style = document.createElement('style');
+    style.textContent = `.nav-links a.active { color: var(--purple); } .nav-links a.active::before { opacity: 1; }`;
+    document.head.appendChild(style);
+  </script>
+
+</body>
+</html>
