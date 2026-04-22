@@ -12,19 +12,19 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #0C0C14;
-      --bg2:      #13131F;
-      --bg3:      #1A1A2E;
-      --border:   rgba(255,255,255,0.07);
-      --border2:  rgba(255,255,255,0.12);
-      --purple:   #7C6EFA;
-      --purple2:  #9D92FB;
-      --purple3:  rgba(124,110,250,0.12);
-      --purple4:  rgba(124,110,250,0.06);
-      --text:     #F0EEF8;
-      --muted:    #6E6D82;
-      --muted2:   #9A99AE;
-      --green:    #4FC9A4;
+      --bg:       #111009;
+      --bg2:      #181408;
+      --bg3:      #1E1A0E;
+      --border:   rgba(255,255,255,0.05);
+      --border2:  rgba(255,255,255,0.10);
+      --purple:   #E8A020;
+      --purple2:  #F0B84A;
+      --purple3:  rgba(232,160,32,0.10);
+      --purple4:  rgba(232,160,32,0.05);
+      --text:     #FAF6EC;
+      --muted:    #6B5B42;
+      --muted2:   #C4AA88;
+      --green:    #E8A020;
       --mono:     'IBM Plex Mono', monospace;
       --serif:    'Fraunces', serif;
       --sans:     'Outfit', sans-serif;
@@ -150,10 +150,13 @@
     }
 
     .section-tag::before { content: '01'; color: var(--muted); margin-right: 2px; }
-    #about    .section-tag::before { content: '02'; }
-    #research .section-tag::before { content: '03'; }
-    #experience .section-tag::before { content: '04'; }
-    #contact  .section-tag::before { content: '05'; }
+    #about        .section-tag::before { content: '02'; }
+    #research     .section-tag::before { content: '03'; }
+    #conferences  .section-tag::before { content: '04'; }
+    #experience   .section-tag::before { content: '05'; }
+    #volunteering .section-tag::before { content: '06'; }
+    #interests    .section-tag::before { content: '07'; }
+    #contact      .section-tag::before { content: '08'; }
 
     .section-tag::after {
       content: '';
@@ -408,59 +411,89 @@
       color: var(--muted2);
     }
 
-    /* ── RESEARCH TIMELINE ── */
-    .pub-timeline {
+    /* ── BILATERAL CENTRE-SPINE TIMELINE ── */
+
+    /* shared by pub-timeline, .timeline (experience/volunteering/conferences) */
+    .pub-timeline, .timeline {
       position: relative;
-      padding-left: 48px;
-      margin-top: 1rem;
+      margin-top: 1.5rem;
     }
 
-    .pub-timeline::before {
+    .pub-timeline::before, .timeline::before {
       content: '';
       position: absolute;
-      left: 16px;
-      top: 12px;
-      bottom: 12px;
+      left: 50%;
+      top: 0; bottom: 0;
       width: 1px;
+      transform: translateX(-50%);
       background: linear-gradient(to bottom,
-        transparent 0%, var(--border2) 8%,
-        var(--border2) 92%, transparent 100%
+        transparent 0%, var(--border2) 5%,
+        var(--border2) 95%, transparent 100%
       );
     }
 
-    .pub-entry {
+    /* Each row: left-card | centre-axis | right-card */
+    .pub-entry, .timeline-item {
       position: relative;
-      padding: 0 0 2.5rem 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 56px 1fr;
+      gap: 0;
+      margin-bottom: 2rem;
+      align-items: start;
     }
 
-    .pub-entry:last-child { padding-bottom: 0; }
+    .pub-entry:last-child, .timeline-item:last-child { margin-bottom: 0; }
 
-    .pub-entry::before {
-      content: '';
-      position: absolute;
-      left: -40px;
-      top: 6px;
-      width: 9px;
-      height: 9px;
+    /* Centre column: year label + dot */
+    .pub-entry-year, .timeline-axis {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding-top: 10px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .pub-entry-year-label, .timeline-axis-year {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--purple);
+      letter-spacing: 0.06em;
+      background: var(--bg);
+      padding: 2px 5px;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .pub-entry-dot, .timeline-axis-dot {
+      width: 11px;
+      height: 11px;
       border-radius: 50%;
       background: var(--bg);
       border: 2px solid var(--purple);
-      z-index: 1;
       transition: background 0.25s;
+      flex-shrink: 0;
     }
 
-    .pub-entry:hover::before { background: var(--purple); }
+    .pub-entry:hover .pub-entry-dot,
+    .timeline-item:hover .timeline-axis-dot { background: var(--purple); }
 
-    .pub-entry::after {
-      content: '';
-      position: absolute;
-      left: -31px;
-      top: 10px;
-      width: 31px;
-      height: 1px;
-      background: var(--border2);
+    /* Left / right card columns */
+    .pub-entry-left, .timeline-left {
+      padding-right: 18px;
+      display: flex;
+      justify-content: flex-end;
     }
 
+    .pub-entry-right, .timeline-right {
+      padding-left: 18px;
+    }
+
+    .pub-entry-empty, .timeline-empty { }
+
+    /* Cards */
     .pub-card {
       background: var(--bg2);
       border: 1px solid var(--border);
@@ -470,88 +503,85 @@
       text-decoration: none;
       color: inherit;
       display: block;
+      width: 100%;
     }
 
     .pub-card:hover { border-color: var(--border2); background: var(--bg3); }
 
-    .pub-card-body {
-      padding: 18px 20px 14px;
-    }
+    .pub-card-body { padding: 14px 16px 12px; }
 
     .pub-card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 8px;
+      gap: 8px;
+      margin-bottom: 6px;
     }
 
     .pub-year-badge {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 9px;
       color: var(--purple2);
       background: var(--purple3);
-      border: 1px solid rgba(124,110,250,0.2);
-      padding: 2px 8px;
-      border-radius: 4px;
+      border: 1px solid rgba(232,160,32,0.2);
+      padding: 2px 6px;
+      border-radius: 3px;
       letter-spacing: 0.05em;
       flex-shrink: 0;
     }
 
     .pub-title {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text);
       line-height: 1.55;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-weight: 400;
     }
 
     .pub-meta {
       display: flex;
-      gap: 10px;
+      gap: 6px;
       align-items: center;
       flex-wrap: wrap;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .pub-journal {
       font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.03em;
+      font-size: 9px;
+      color: var(--muted2);
+      letter-spacing: 0.02em;
     }
 
     .pub-tag {
       font-family: var(--mono);
-      font-size: 9px;
-      padding: 2px 7px;
-      border-radius: 4px;
+      font-size: 8px;
+      padding: 2px 6px;
+      border-radius: 3px;
       background: var(--purple3);
       color: var(--purple2);
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
     }
 
-    /* Citation bar */
     .pub-cit {
       border-top: 1px solid var(--border);
-      padding: 10px 20px;
+      padding: 7px 16px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .pub-cit-label {
       font-family: var(--mono);
-      font-size: 9px;
-      color: var(--muted);
-      letter-spacing: 0.08em;
+      font-size: 8px;
+      color: var(--muted2);
+      letter-spacing: 0.06em;
       white-space: nowrap;
-      min-width: 72px;
     }
 
     .pub-cit-bar-wrap {
       flex: 1;
-      height: 4px;
+      height: 3px;
       background: var(--border2);
       border-radius: 2px;
       overflow: hidden;
@@ -562,18 +592,18 @@
       border-radius: 2px;
       background: var(--purple);
       width: 0;
-      transition: width 1s ease 0.3s;
+      transition: width 1.1s ease 0.3s;
     }
 
     .pub-cit-count {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 10px;
       color: var(--purple2);
-      min-width: 28px;
+      min-width: 20px;
       text-align: right;
     }
 
-    /* Citation chart summary */
+    /* Citation chart */
     .cit-chart-wrap {
       margin-top: 2.5rem;
       background: var(--bg2);
@@ -592,9 +622,8 @@
     .cit-chart-title {
       font-family: var(--mono);
       font-size: 10px;
-      color: var(--muted);
+      color: var(--muted2);
       letter-spacing: 0.1em;
-      text-transform: lowercase;
     }
 
     .cit-chart-total {
@@ -634,10 +663,11 @@
     .cit-bar-year {
       font-family: var(--mono);
       font-size: 8px;
-      color: var(--muted);
+      color: var(--muted2);
       letter-spacing: 0.04em;
     }
 
+    /* Research interests tags */
     .research-interests {
       display: flex;
       flex-wrap: wrap;
@@ -658,72 +688,14 @@
 
     .interest-tag:hover { border-color: var(--purple); color: var(--purple2); }
 
-    /* ── EXPERIENCE TIMELINE ── */
-    .timeline {
-      position: relative;
-      padding-left: 48px;
-      margin-top: 1rem;
-    }
-
-    /* Central vertical line */
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 16px;
-      top: 12px;
-      bottom: 12px;
-      width: 1px;
-      background: linear-gradient(to bottom,
-        transparent 0%,
-        var(--border2) 8%,
-        var(--border2) 92%,
-        transparent 100%
-      );
-    }
-
-    .timeline-item {
-      position: relative;
-      padding: 0 0 3rem 1.5rem;
-    }
-
-    .timeline-item:last-child { padding-bottom: 0; }
-
-    /* Node circle on the line */
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -40px;
-      top: 4px;
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      background: var(--bg);
-      border: 2px solid var(--purple);
-      transition: background 0.3s;
-      z-index: 1;
-    }
-
-    .timeline-item:hover::before {
-      background: var(--purple);
-    }
-
-    /* Connector from node to card */
-    .timeline-item::after {
-      content: '';
-      position: absolute;
-      left: -29px;
-      top: 9px;
-      width: 29px;
-      height: 1px;
-      background: var(--border2);
-    }
-
+    /* Experience / volunteering / conference timeline cards */
     .timeline-card {
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 20px 22px;
+      padding: 14px 16px;
       transition: border-color 0.25s, background 0.25s;
+      width: 100%;
     }
 
     .timeline-item:hover .timeline-card {
@@ -735,77 +707,56 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 10px;
+      gap: 8px;
+      margin-bottom: 6px;
       flex-wrap: wrap;
     }
 
     .timeline-badge {
       font-family: var(--mono);
       font-size: 9px;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       text-transform: lowercase;
-      padding: 3px 9px;
+      padding: 3px 8px;
       border-radius: 20px;
       flex-shrink: 0;
-      margin-top: 2px;
     }
 
-    .timeline-badge.edu {
-      background: var(--purple3);
-      color: var(--purple2);
-      border: 1px solid rgba(124,110,250,0.25);
-    }
-
-    .timeline-badge.work {
-      background: rgba(79,201,164,0.1);
-      color: #4FC9A4;
-      border: 1px solid rgba(79,201,164,0.25);
-    }
+    .timeline-badge.edu  { background: rgba(232,160,32,0.10); color: #E8A020; border: 1px solid rgba(232,160,32,0.3); }
+    .timeline-badge.work { background: rgba(100,200,140,0.10); color: #5CC896; border: 1px solid rgba(100,200,140,0.25); }
+    .timeline-badge.conf { background: rgba(150,100,255,0.12); color: #B48EFA; border: 1px solid rgba(150,100,255,0.25); }
+    .timeline-badge.vol  { background: rgba(255,120,100,0.10); color: #FF7864; border: 1px solid rgba(255,120,100,0.25); }
 
     .timeline-date {
       font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.06em;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .timeline-date::before {
-      content: '';
-      display: inline-block;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--muted);
-      opacity: 0.4;
+      font-size: 9px;
+      color: var(--muted2);
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
     }
 
     .timeline-role {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 400;
       color: var(--text);
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       line-height: 1.35;
     }
 
     .timeline-org {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 10px;
       color: var(--purple);
-      margin-bottom: 10px;
+      margin-bottom: 7px;
       letter-spacing: 0.03em;
     }
 
     .timeline-desc {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--muted2);
-      line-height: 1.75;
+      line-height: 1.7;
       border-top: 1px solid var(--border);
-      padding-top: 10px;
+      padding-top: 7px;
     }
 
     /* ── CONTACT ── */
@@ -891,20 +842,32 @@
       .hero-photo-col { order: -1; }
       .hero-stats { flex-direction: row; flex-wrap: wrap; }
       .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .pub-timeline { padding-left: 28px; }
-      .pub-timeline::before { left: 8px; }
-      .pub-entry::before { left: -24px; }
-      .pub-entry::after { left: -13px; width: 13px; }
-      .timeline { padding-left: 28px; }
-      .timeline::before { left: 8px; }
-      .timeline-item::before { left: -24px; }
-      .timeline-item::after { left: -13px; width: 13px; }
-      .nav-links { gap: 16px; }
+      .nav-links { gap: 12px; }
       h1 { font-size: 2.8rem; }
+      /* collapse bilateral timelines to single left-spine on mobile */
+      .pub-entry, .timeline-item {
+        grid-template-columns: 28px 1fr;
+        grid-template-rows: auto;
+      }
+      .pub-entry-left, .timeline-left {
+        grid-column: 2; grid-row: 1;
+        padding-right: 0; padding-left: 12px;
+        justify-content: flex-start;
+      }
+      .pub-entry-right, .timeline-right {
+        grid-column: 2; grid-row: 1;
+        padding-left: 12px;
+      }
+      .pub-entry-year, .timeline-axis {
+        grid-column: 1; grid-row: 1;
+        padding-top: 10px;
+      }
+      .pub-entry-empty, .timeline-empty { display: none; }
+      .pub-timeline::before, .timeline::before { left: 13px; }
     }
 
     @media (max-width: 520px) {
-      .nav-links li:not(:last-child) { display: none; }
+      .nav-links li:nth-child(n+4) { display: none; }
     }
   </style>
 </head>
@@ -917,7 +880,10 @@
       <li><a href="#hero">home</a></li>
       <li><a href="#about">about</a></li>
       <li><a href="#research">research</a></li>
+      <li><a href="#conferences">conferences</a></li>
       <li><a href="#experience">experience</a></li>
+      <li><a href="#volunteering">volunteering</a></li>
+      <li><a href="#interests">interests</a></li>
       <li><a href="#contact">contact</a></li>
     </ul>
   </nav>
@@ -930,7 +896,7 @@
       <div class="hero-photo-col">
         <div class="hero-photo-frame">
           <!-- Replace the placeholder below with: <img src="assets/photo.jpg" alt="Zahidul Islam Khan"> -->
-          <img src="assets/photo.jpg" alt="Zahidul Islam Khan">
+          <div class="hero-photo-placeholder">ZK</div>
         </div>
         <div class="hero-photo-caption">
           Zahidul Islam Khan<br>Oulu, Finland
@@ -956,12 +922,12 @@
 
       <div class="hero-stats">
         <div class="hero-stat">
-          <div class="hero-stat-n">6<span>+</span></div>
+          <div class="hero-stat-n">7<span>+</span></div>
           <div class="hero-stat-l">publications</div>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-n">2</div>
-          <div class="hero-stat-l">conference talks</div>
+          <div class="hero-stat-n">80<span>+</span></div>
+          <div class="hero-stat-l">citations</div>
         </div>
         <div class="hero-stat">
           <div class="hero-stat-n">3<span>+</span></div>
@@ -1045,129 +1011,185 @@
 
       <div class="pub-timeline fade-in">
 
+        <!-- 1: BMC Women's Health 2023 — LEFT -->
         <div class="pub-entry">
-          <a href="https://doi.org/10.1038/s41371-023-00879-x" class="pub-card" target="_blank" rel="noopener">
-            <div class="pub-card-body">
-              <div class="pub-card-header">
-                <div class="pub-title">Prevalence and determinants of hypertension in South-Asian urban communities: findings from Demographic and Health Surveys data</div>
-                <span class="pub-year-badge">2024</span>
+          <div class="pub-entry-left">
+            <a href="https://doi.org/10.1186/s12905-023-02701-9" class="pub-card" target="_blank" rel="noopener">
+              <div class="pub-card-body">
+                <div class="pub-card-header">
+                  <div class="pub-title">A comparative study of ML algorithms for predicting domestic violence vulnerability in Liberian women</div>
+                  <span class="pub-year-badge">2023</span>
+                </div>
+                <div class="pub-meta">
+                  <span class="pub-journal">BMC Women's Health</span>
+                  <span class="pub-tag">machine learning</span>
+                  <span class="pub-tag">GBV</span>
+                </div>
               </div>
-              <div class="pub-meta">
-                <span class="pub-journal">Journal of Human Hypertension</span>
-                <span class="pub-tag">hypertension</span>
-                <span class="pub-tag">South Asia</span>
+              <div class="pub-cit">
+                <span class="pub-cit-label">cited by</span>
+                <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="100"></div></div>
+                <span class="pub-cit-count">23</span>
               </div>
-            </div>
-            <div class="pub-cit">
-              <span class="pub-cit-label">// citations</span>
-              <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="40"></div></div>
-              <span class="pub-cit-count">8</span>
-            </div>
-          </a>
+            </a>
+          </div>
+          <div class="pub-entry-year"><div class="pub-entry-year-label">2023</div><div class="pub-entry-dot"></div></div>
+          <div class="pub-entry-empty"></div>
         </div>
 
+        <!-- 2: J Human Hypertension 2024 — RIGHT -->
         <div class="pub-entry">
-          <a href="https://doi.org/10.1186/s12905-023-02701-9" class="pub-card" target="_blank" rel="noopener">
-            <div class="pub-card-body">
-              <div class="pub-card-header">
-                <div class="pub-title">A comparative study of machine learning algorithms for predicting domestic violence vulnerability in Liberian women</div>
-                <span class="pub-year-badge">2023</span>
+          <div class="pub-entry-empty"></div>
+          <div class="pub-entry-year"><div class="pub-entry-year-label">2024</div><div class="pub-entry-dot"></div></div>
+          <div class="pub-entry-right">
+            <a href="https://doi.org/10.1038/s41371-023-00879-x" class="pub-card" target="_blank" rel="noopener">
+              <div class="pub-card-body">
+                <div class="pub-card-header">
+                  <div class="pub-title">Prevalence and determinants of hypertension in South-Asian urban communities: findings from DHS data</div>
+                  <span class="pub-year-badge">2024</span>
+                </div>
+                <div class="pub-meta">
+                  <span class="pub-journal">Journal of Human Hypertension</span>
+                  <span class="pub-tag">hypertension</span>
+                  <span class="pub-tag">South Asia</span>
+                </div>
               </div>
-              <div class="pub-meta">
-                <span class="pub-journal">BMC Women's Health</span>
-                <span class="pub-tag">machine learning</span>
-                <span class="pub-tag">GBV</span>
+              <div class="pub-cit">
+                <span class="pub-cit-label">cited by</span>
+                <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="70"></div></div>
+                <span class="pub-cit-count">16</span>
               </div>
-            </div>
-            <div class="pub-cit">
-              <span class="pub-cit-label">// citations</span>
-              <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="30"></div></div>
-              <span class="pub-cit-count">6</span>
-            </div>
-          </a>
+            </a>
+          </div>
         </div>
 
+        <!-- 3: Heliyon first birth Albania 2021 — LEFT -->
         <div class="pub-entry">
-          <a href="https://doi.org/10.1016/j.heliyon.2023.e16434" class="pub-card" target="_blank" rel="noopener">
-            <div class="pub-card-body">
-              <div class="pub-card-header">
-                <div class="pub-title">Implementation of jute-based nose holder in surgical masks to reduce plastic contamination</div>
-                <span class="pub-year-badge">2023</span>
+          <div class="pub-entry-left">
+            <a href="https://doi.org/10.1016/j.heliyon.2021.e06547" class="pub-card" target="_blank" rel="noopener">
+              <div class="pub-card-body">
+                <div class="pub-card-header">
+                  <div class="pub-title">Factors associated with age of mother at first birth in Albania: application of quantile regression model</div>
+                  <span class="pub-year-badge">2021</span>
+                </div>
+                <div class="pub-meta">
+                  <span class="pub-journal">Heliyon</span>
+                  <span class="pub-tag">reproductive health</span>
+                  <span class="pub-tag">Albania</span>
+                </div>
               </div>
-              <div class="pub-meta">
-                <span class="pub-journal">Heliyon</span>
-                <span class="pub-tag">sustainability</span>
+              <div class="pub-cit">
+                <span class="pub-cit-label">cited by</span>
+                <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="65"></div></div>
+                <span class="pub-cit-count">15</span>
               </div>
-            </div>
-            <div class="pub-cit">
-              <span class="pub-cit-label">// citations</span>
-              <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="15"></div></div>
-              <span class="pub-cit-count">3</span>
-            </div>
-          </a>
+            </a>
+          </div>
+          <div class="pub-entry-year"><div class="pub-entry-year-label">2021</div><div class="pub-entry-dot"></div></div>
+          <div class="pub-entry-empty"></div>
         </div>
 
+        <!-- 4: Clinical Epidemiology anemia 2022 — RIGHT -->
         <div class="pub-entry">
-          <a href="https://doi.org/10.1136/bmjopen-2022-065674" class="pub-card" target="_blank" rel="noopener">
-            <div class="pub-card-body">
-              <div class="pub-card-header">
-                <div class="pub-title">Trends and patterns of inequalities in using facility delivery among reproductive-age women in Bangladesh: a decomposition analysis</div>
-                <span class="pub-year-badge">2022</span>
+          <div class="pub-entry-empty"></div>
+          <div class="pub-entry-year"><div class="pub-entry-year-label">2022</div><div class="pub-entry-dot"></div></div>
+          <div class="pub-entry-right">
+            <a href="https://doi.org/10.1016/j.cegh.2021.100948" class="pub-card" target="_blank" rel="noopener">
+              <div class="pub-card-body">
+                <div class="pub-card-header">
+                  <div class="pub-title">Risk factors associated with anemia among women of reproductive age (15–49) in Albania: a quantile regression analysis</div>
+                  <span class="pub-year-badge">2022</span>
+                </div>
+                <div class="pub-meta">
+                  <span class="pub-journal">Clinical Epidemiology and Global Health</span>
+                  <span class="pub-tag">anemia</span>
+                  <span class="pub-tag">quantile regression</span>
+                </div>
               </div>
-              <div class="pub-meta">
-                <span class="pub-journal">BMJ Open</span>
-                <span class="pub-tag">maternal health</span>
-                <span class="pub-tag">Bangladesh</span>
+              <div class="pub-cit">
+                <span class="pub-cit-label">cited by</span>
+                <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="57"></div></div>
+                <span class="pub-cit-count">13</span>
               </div>
-            </div>
-            <div class="pub-cit">
-              <span class="pub-cit-label">// citations</span>
-              <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="55"></div></div>
-              <span class="pub-cit-count">11</span>
-            </div>
-          </a>
+            </a>
+          </div>
         </div>
 
+        <!-- 5: BMJ Open facility delivery 2022 — LEFT -->
         <div class="pub-entry">
-          <a href="https://doi.org/10.1016/j.cegh.2021.100948" class="pub-card" target="_blank" rel="noopener">
-            <div class="pub-card-body">
-              <div class="pub-card-header">
-                <div class="pub-title">Risk factors associated with anemia among women of reproductive age (15–49) in Albania: a quantile regression analysis</div>
-                <span class="pub-year-badge">2022</span>
+          <div class="pub-entry-left">
+            <a href="https://doi.org/10.1136/bmjopen-2022-065674" class="pub-card" target="_blank" rel="noopener">
+              <div class="pub-card-body">
+                <div class="pub-card-header">
+                  <div class="pub-title">Trends and patterns of inequalities in using facility delivery among reproductive-age women in Bangladesh: a decomposition analysis</div>
+                  <span class="pub-year-badge">2022</span>
+                </div>
+                <div class="pub-meta">
+                  <span class="pub-journal">BMJ Open</span>
+                  <span class="pub-tag">maternal health</span>
+                  <span class="pub-tag">Bangladesh</span>
+                </div>
               </div>
-              <div class="pub-meta">
-                <span class="pub-journal">Clinical Epidemiology and Global Health</span>
-                <span class="pub-tag">anemia</span>
-                <span class="pub-tag">quantile regression</span>
+              <div class="pub-cit">
+                <span class="pub-cit-label">cited by</span>
+                <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="48"></div></div>
+                <span class="pub-cit-count">11</span>
               </div>
-            </div>
-            <div class="pub-cit">
-              <span class="pub-cit-label">// citations</span>
-              <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="25"></div></div>
-              <span class="pub-cit-count">5</span>
-            </div>
-          </a>
+            </a>
+          </div>
+          <div class="pub-entry-year"><div class="pub-entry-year-label">2022</div><div class="pub-entry-dot"></div></div>
+          <div class="pub-entry-empty"></div>
         </div>
 
+        <!-- 6: Heliyon jute mask 2023 — RIGHT -->
         <div class="pub-entry">
-          <a href="https://doi.org/10.1016/j.heliyon.2021.e06547" class="pub-card" target="_blank" rel="noopener">
-            <div class="pub-card-body">
-              <div class="pub-card-header">
-                <div class="pub-title">Factors associated with age of mother at first birth in Albania: application of quantile regression model</div>
-                <span class="pub-year-badge">2021</span>
+          <div class="pub-entry-empty"></div>
+          <div class="pub-entry-year"><div class="pub-entry-year-label">2023</div><div class="pub-entry-dot"></div></div>
+          <div class="pub-entry-right">
+            <a href="https://doi.org/10.1016/j.heliyon.2023.e16434" class="pub-card" target="_blank" rel="noopener">
+              <div class="pub-card-body">
+                <div class="pub-card-header">
+                  <div class="pub-title">Implementation of jute-based nose holder in surgical masks to reduce plastic contamination</div>
+                  <span class="pub-year-badge">2023</span>
+                </div>
+                <div class="pub-meta">
+                  <span class="pub-journal">Heliyon</span>
+                  <span class="pub-tag">sustainability</span>
+                </div>
               </div>
-              <div class="pub-meta">
-                <span class="pub-journal">Heliyon</span>
-                <span class="pub-tag">reproductive health</span>
-                <span class="pub-tag">Albania</span>
+              <div class="pub-cit">
+                <span class="pub-cit-label">cited by</span>
+                <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="9"></div></div>
+                <span class="pub-cit-count">2</span>
               </div>
-            </div>
-            <div class="pub-cit">
-              <span class="pub-cit-label">// citations</span>
-              <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="10"></div></div>
-              <span class="pub-cit-count">2</span>
-            </div>
-          </a>
+            </a>
+          </div>
+        </div>
+
+        <!-- 7: Khulna Univ Studies 2022 — LEFT -->
+        <div class="pub-entry">
+          <div class="pub-entry-left">
+            <a href="https://ku.ac.bd/journal/kustudies/issue/view/18" class="pub-card" target="_blank" rel="noopener">
+              <div class="pub-card-body">
+                <div class="pub-card-header">
+                  <div class="pub-title">Factors affecting depression and stress among tertiary level students during the COVID-19 pandemic: a cross-sectional study in Bangladesh</div>
+                  <span class="pub-year-badge">2022</span>
+                </div>
+                <div class="pub-meta">
+                  <span class="pub-journal">Khulna University Studies</span>
+                  <span class="pub-tag">mental health</span>
+                  <span class="pub-tag">COVID-19</span>
+                </div>
+              </div>
+              <div class="pub-cit">
+                <span class="pub-cit-label">cited by</span>
+                <div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="0"></div></div>
+                <span class="pub-cit-count">0</span>
+              </div>
+            </a>
+          </div>
+          <div class="pub-entry-year"><div class="pub-entry-year-label">2022</div><div class="pub-entry-dot"></div></div>
+          <div class="pub-entry-empty"></div>
         </div>
 
       </div>
@@ -1176,14 +1198,9 @@
       <div class="cit-chart-wrap fade-in">
         <div class="cit-chart-header">
           <span class="cit-chart-title">// citations by year</span>
-          <span class="cit-chart-total">35 total · Google Scholar</span>
+          <span class="cit-chart-total">78 total · Google Scholar</span>
         </div>
-        <div class="cit-bars" id="cit-bars">
-          <!-- Bars rendered by JS below -->
-        </div>
-        <div style="margin-top:8px;font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:0.06em;">
-          update citation counts above and in the script to match your Google Scholar profile
-        </div>
+        <div class="cit-bars" id="cit-bars"></div>
       </div>
 
       <div class="research-interests fade-in">
@@ -1198,6 +1215,53 @@
       </div>
     </section>
 
+    <!-- CONFERENCES -->
+    <section id="conferences">
+      <div class="section-tag">conferences</div>
+      <h2>Conference <em>presentations</em></h2>
+
+      <div class="timeline fade-in">
+
+        <!-- AIDS 2024 — LEFT -->
+        <div class="timeline-item">
+          <div class="timeline-left">
+            <a href="https://programme.aids2024.org/Abstract/Abstract/?abstractid=8398" class="timeline-card" target="_blank" rel="noopener" style="text-decoration:none;display:block">
+              <div class="timeline-card-header">
+                <div>
+                  <div class="timeline-date">22–26 July 2024</div>
+                  <div class="timeline-role">Discrepancies among self-reported symptoms vs laboratory-based diagnosis of STIs among female sex workers in Jashore, Bangladesh</div>
+                  <div class="timeline-org">25th International AIDS Conference · Munich, Germany</div>
+                </div>
+                <span class="timeline-badge conf">oral</span>
+              </div>
+            </a>
+          </div>
+          <div class="timeline-axis"><div class="timeline-axis-year">2024</div><div class="timeline-axis-dot"></div></div>
+          <div class="timeline-empty"></div>
+        </div>
+
+        <!-- Khulna STEM 2022 — RIGHT -->
+        <div class="timeline-item">
+          <div class="timeline-empty"></div>
+          <div class="timeline-axis"><div class="timeline-axis-year">2022</div><div class="timeline-axis-dot"></div></div>
+          <div class="timeline-right">
+            <div class="timeline-card">
+              <div class="timeline-card-header">
+                <div>
+                  <div class="timeline-date">01–04 July 2022</div>
+                  <div class="timeline-role">Factors affecting depression and stress among tertiary level students during the COVID-19 pandemic</div>
+                  <div class="timeline-org">International Conference on STEM &amp; the 4th Industrial Revolution · Khulna University</div>
+                </div>
+                <span class="timeline-badge conf">paper</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
     <!-- EXPERIENCE -->
     <section id="experience">
       <div class="section-tag">experience</div>
@@ -1205,62 +1269,287 @@
 
       <div class="timeline">
 
+        <!-- MSc Oulu — LEFT -->
         <div class="timeline-item fade-in">
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <div>
-                <div class="timeline-date">2024 – present</div>
-                <div class="timeline-role">MSc — Epidemiology and Biomedical Data Science</div>
-                <div class="timeline-org">University of Oulu · Oulu, Finland</div>
+          <div class="timeline-left">
+            <div class="timeline-card">
+              <div class="timeline-card-header">
+                <div>
+                  <div class="timeline-date">2024 – present</div>
+                  <div class="timeline-role">MSc — Epidemiology and Biomedical Data Science</div>
+                  <div class="timeline-org">University of Oulu · Oulu, Finland</div>
+                </div>
+                <span class="timeline-badge edu">education</span>
               </div>
-              <span class="timeline-badge edu">education</span>
+              <div class="timeline-desc">Specialising in biostatistics, longitudinal data analysis, and epidemiological methods. Research focus on population health and health data science.</div>
             </div>
-            <div class="timeline-desc">Specialising in biostatistics, longitudinal data analysis, and epidemiological methods. Research focus on population health and health data science.</div>
+          </div>
+          <div class="timeline-axis"><div class="timeline-axis-year">Present</div><div class="timeline-axis-dot"></div><div class="timeline-axis-year">2024</div></div>
+          <div class="timeline-empty"></div>
+        </div>
+
+        <!-- icddr,b — RIGHT -->
+        <div class="timeline-item fade-in">
+          <div class="timeline-empty"></div>
+          <div class="timeline-axis"><div class="timeline-axis-year">2023</div><div class="timeline-axis-dot"></div><div class="timeline-axis-year">2022</div></div>
+          <div class="timeline-right">
+            <div class="timeline-card">
+              <div class="timeline-card-header">
+                <div>
+                  <div class="timeline-date">2022 – 2023</div>
+                  <div class="timeline-role">Data Management Officer</div>
+                  <div class="timeline-org">icddr,b · Dhaka, Bangladesh</div>
+                </div>
+                <span class="timeline-badge work">work</span>
+              </div>
+              <div class="timeline-desc">Managed data infrastructure for HIV and AIDS research programmes under the Health Systems and Population Studies Division. Worked on data quality, cleaning, and analysis pipelines for large-scale health surveys.</div>
+            </div>
           </div>
         </div>
 
+        <!-- TwinBit — LEFT -->
         <div class="timeline-item fade-in">
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <div>
-                <div class="timeline-date">2022 – 2023</div>
-                <div class="timeline-role">Data Management Officer</div>
-                <div class="timeline-org">icddr,b · Dhaka, Bangladesh</div>
+          <div class="timeline-left">
+            <div class="timeline-card">
+              <div class="timeline-card-header">
+                <div>
+                  <div class="timeline-date">2021 – 2022</div>
+                  <div class="timeline-role">Data Analyst</div>
+                  <div class="timeline-org">TwinBit Limited · Bangladesh</div>
+                </div>
+                <span class="timeline-badge work">work</span>
               </div>
-              <span class="timeline-badge work">work</span>
+              <div class="timeline-desc">Data analysis and reporting for an iOS software development company. Built dashboards and analytical reports to support product decisions.</div>
             </div>
-            <div class="timeline-desc">Managed data infrastructure for HIV and AIDS research programmes under the Health Systems and Population Studies Division. Worked on data quality, cleaning, and analysis pipelines for large-scale health surveys.</div>
+          </div>
+          <div class="timeline-axis"><div class="timeline-axis-year">2022</div><div class="timeline-axis-dot"></div><div class="timeline-axis-year">2021</div></div>
+          <div class="timeline-empty"></div>
+        </div>
+
+        <!-- Khulna BSc — RIGHT -->
+        <div class="timeline-item fade-in">
+          <div class="timeline-empty"></div>
+          <div class="timeline-axis"><div class="timeline-axis-year">2020</div><div class="timeline-axis-dot"></div><div class="timeline-axis-year">2016</div></div>
+          <div class="timeline-right">
+            <div class="timeline-card">
+              <div class="timeline-card-header">
+                <div>
+                  <div class="timeline-date">2016 – 2020</div>
+                  <div class="timeline-role">BSc in Statistics</div>
+                  <div class="timeline-org">Khulna University · Khulna, Bangladesh</div>
+                </div>
+                <span class="timeline-badge edu">education</span>
+              </div>
+              <div class="timeline-desc">Undergraduate research in biostatistics and applied statistics. Thesis work on maternal and child health using national survey data.</div>
+            </div>
           </div>
         </div>
 
+      </div>
+    </section>
+
+    <section id="volunteering">
+      <div class="section-tag">volunteering</div>
+      <h2>Community &amp; <em>service</em></h2>
+
+      <div class="timeline">
+
+        <!-- Arctic Tigers — LEFT -->
         <div class="timeline-item fade-in">
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <div>
-                <div class="timeline-date">2021 – 2022</div>
-                <div class="timeline-role">Data Analyst</div>
-                <div class="timeline-org">TwinBit Limited · Bangladesh</div>
+          <div class="timeline-left">
+            <div class="timeline-card">
+              <div class="timeline-card-header">
+                <div>
+                  <div class="timeline-date">01/2026 – present</div>
+                  <div class="timeline-role">Executive Member</div>
+                  <div class="timeline-org">Oulun Arctic Tigers Ry · Oulu, Finland</div>
+                </div>
+                <span class="timeline-badge vol">community</span>
               </div>
-              <span class="timeline-badge work">work</span>
+              <div class="timeline-desc">Serving as an executive member of a local association in Oulu, contributing to community organisation and events.</div>
             </div>
-            <div class="timeline-desc">Data analysis and reporting for an iOS software development company. Built dashboards and analytical reports to support product decisions.</div>
+          </div>
+          <div class="timeline-axis"><div class="timeline-axis-year">2026</div><div class="timeline-axis-dot"></div></div>
+          <div class="timeline-empty"></div>
+        </div>
+
+        <!-- Pitha Utshob — RIGHT -->
+        <div class="timeline-item fade-in">
+          <div class="timeline-empty"></div>
+          <div class="timeline-axis"><div class="timeline-axis-year">2026</div><div class="timeline-axis-dot"></div></div>
+          <div class="timeline-right">
+            <div class="timeline-card">
+              <div class="timeline-card-header">
+                <div>
+                  <div class="timeline-date">01/2026</div>
+                  <div class="timeline-role">Organizer — Pitha Utshob</div>
+                  <div class="timeline-org">Bangladeshi Cultural Festival · Oulu, Finland</div>
+                </div>
+                <span class="timeline-badge vol">culture</span>
+              </div>
+              <div class="timeline-desc">Organised the Pitha Utshob, a Bangladeshi cultural festival celebrating traditional food and heritage within the Oulu community.</div>
+            </div>
           </div>
         </div>
 
+        <!-- Colorful Restaurant — LEFT -->
         <div class="timeline-item fade-in">
-          <div class="timeline-card">
-            <div class="timeline-card-header">
-              <div>
-                <div class="timeline-date">2016 – 2020</div>
-                <div class="timeline-role">BSc in Statistics</div>
-                <div class="timeline-org">Khulna University · Khulna, Bangladesh</div>
+          <div class="timeline-left">
+            <div class="timeline-card">
+              <div class="timeline-card-header">
+                <div>
+                  <div class="timeline-date">06/2025</div>
+                  <div class="timeline-role">Volunteer</div>
+                  <div class="timeline-org">Colorful Restaurant · Multicultural Centre Villa Victor, Oulu</div>
+                </div>
+                <span class="timeline-badge vol">community</span>
               </div>
-              <span class="timeline-badge edu">education</span>
+              <div class="timeline-desc">Volunteered at a multicultural community restaurant, supporting intercultural exchange and community integration in Oulu.</div>
             </div>
-            <div class="timeline-desc">Undergraduate research in biostatistics and applied statistics. Thesis work on maternal and child health using national survey data.</div>
+          </div>
+          <div class="timeline-axis"><div class="timeline-axis-year">2025</div><div class="timeline-axis-dot"></div></div>
+          <div class="timeline-empty"></div>
+        </div>
+
+        <!-- EPH Conference — RIGHT -->
+        <div class="timeline-item fade-in">
+          <div class="timeline-empty"></div>
+          <div class="timeline-axis"><div class="timeline-axis-year">2025</div><div class="timeline-axis-dot"></div></div>
+          <div class="timeline-right">
+            <div class="timeline-card">
+              <div class="timeline-card-header">
+                <div>
+                  <div class="timeline-date">11/2025</div>
+                  <div class="timeline-role">Volunteer</div>
+                  <div class="timeline-org">European Public Health Conference · Helsinki, Finland</div>
+                </div>
+                <span class="timeline-badge conf">conference</span>
+              </div>
+              <div class="timeline-desc">Volunteered at the European Public Health Conference in Helsinki, supporting the organisation of one of Europe's leading public health events.</div>
+            </div>
           </div>
         </div>
 
+        <!-- Oulu Cultural Capital — LEFT -->
+        <div class="timeline-item fade-in">
+          <div class="timeline-left">
+            <div class="timeline-card">
+              <div class="timeline-card-header">
+                <div>
+                  <div class="timeline-date">02/2025 – present</div>
+                  <div class="timeline-role">Volunteer</div>
+                  <div class="timeline-org">Oulu Cultural Capital 2026 · Oulu, Finland</div>
+                </div>
+                <span class="timeline-badge vol">culture</span>
+              </div>
+              <div class="timeline-desc">Contributing to Oulu's year as European Capital of Culture 2026, supporting cultural programming and events across the city.</div>
+            </div>
+          </div>
+          <div class="timeline-axis"><div class="timeline-axis-year">2025</div><div class="timeline-axis-dot"></div></div>
+          <div class="timeline-empty"></div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <section id="interests">
+      <div class="section-tag">interests</div>
+      <h2>Beyond <em>research</em></h2>
+
+      <!-- VALORANT -->
+      <div style="margin-bottom:4rem;" class="fade-in">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--purple);letter-spacing:0.12em;margin-bottom:1.25rem;">// valorant</div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:2.5rem;align-items:start;">
+          <div>
+            <p style="margin-bottom:1rem;">
+              I used to play Valorant seriously with my friends — we'd grind ranked together,
+              communicate strats, and genuinely try to climb. At my peak I hit
+              <strong style="color:var(--purple);font-weight:400">Platinum 3</strong>.
+              Then life happened — MSc applications, research, moving countries — and the squad
+              drifted apart. I still load in solo sometimes, just to unwind. It's not the same,
+              but the muscle memory's still there.
+            </p>
+            <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);letter-spacing:0.06em;">peak rank achieved</div>
+            <!-- Platinum 3 rank display -->
+            <div style="display:flex;align-items:center;gap:14px;margin-top:10px;">
+              <svg width="48" height="56" viewBox="0 0 48 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="24,4 44,15 44,41 24,52 4,41 4,15" fill="#1A1A28" stroke="#7EC8E3" stroke-width="1.5"/>
+                <polygon points="24,10 38,18 38,38 24,46 10,38 10,18" fill="#0D1520" stroke="#7EC8E3" stroke-width="0.5" opacity="0.6"/>
+                <text x="24" y="32" text-anchor="middle" dominant-baseline="central" fill="#7EC8E3" font-size="13" font-weight="bold" font-family="monospace">P3</text>
+                <circle cx="24" cy="20" r="3" fill="#7EC8E3" opacity="0.8"/>
+                <line x1="14" y1="38" x2="34" y2="38" stroke="#7EC8E3" stroke-width="1" opacity="0.5"/>
+              </svg>
+              <div>
+                <div style="font-size:18px;font-family:var(--serif);color:var(--text);font-style:italic;">Platinum III</div>
+                <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:2px;">competitive · solo queue now</div>
+              </div>
+            </div>
+          </div>
+          <!-- Valorant visual — abstract agent silhouette -->
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center;min-width:160px;">
+            <svg width="120" height="130" viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Valorant-style geometric agent -->
+              <rect x="0" y="0" width="120" height="130" rx="8" fill="#0F1923"/>
+              <!-- Body -->
+              <polygon points="60,18 78,30 78,65 60,75 42,65 42,30" fill="#1A2634" stroke="#E8A020" stroke-width="1"/>
+              <!-- Head -->
+              <circle cx="60" cy="16" r="10" fill="#1A2634" stroke="#E8A020" stroke-width="1"/>
+              <!-- Eyes glow -->
+              <circle cx="56" cy="15" r="2" fill="#E8A020" opacity="0.9"/>
+              <circle cx="64" cy="15" r="2" fill="#E8A020" opacity="0.9"/>
+              <!-- Weapon -->
+              <rect x="78" y="44" width="28" height="5" rx="2" fill="#E8A020" opacity="0.8"/>
+              <rect x="94" y="42" width="8" height="2" rx="1" fill="#F0B84A"/>
+              <!-- Legs -->
+              <line x1="50" y1="75" x2="46" y2="100" stroke="#E8A020" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+              <line x1="70" y1="75" x2="74" y2="100" stroke="#E8A020" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+              <!-- Feet -->
+              <rect x="40" y="99" width="12" height="4" rx="2" fill="#E8A020" opacity="0.6"/>
+              <rect x="68" y="99" width="12" height="4" rx="2" fill="#E8A020" opacity="0.6"/>
+              <!-- Crosshair overlay -->
+              <line x1="10" y1="115" x2="110" y2="115" stroke="#E8A020" stroke-width="0.5" opacity="0.3"/>
+              <circle cx="60" cy="115" r="4" fill="none" stroke="#E8A020" stroke-width="0.5" opacity="0.5"/>
+              <line x1="56" y1="115" x2="64" y2="115" stroke="#E8A020" stroke-width="1" opacity="0.6"/>
+              <line x1="60" y1="111" x2="60" y2="119" stroke="#E8A020" stroke-width="1" opacity="0.6"/>
+              <!-- Label -->
+              <text x="60" y="128" text-anchor="middle" fill="#E8A020" font-size="7" font-family="monospace" opacity="0.6">VALORANT</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- DRAWING -->
+      <div class="fade-in">
+        <div style="font-family:var(--mono);font-size:10px;color:var(--purple);letter-spacing:0.12em;margin-bottom:1.25rem;">// portraits &amp; doodles</div>
+        <p style="margin-bottom:1.5rem;">
+          Drawing has always been a quiet hobby — portraits, caricatures, and random doodles
+          that come out of nowhere. There's something satisfying about reducing a face down to
+          its essential lines, or exaggerating one feature until it becomes a character.
+          It's the same kind of careful observation as data analysis, just with a pencil.
+        </p>
+
+        <!-- Drawing showcase grid — add your own images here -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:1rem;">
+          <!-- Placeholder 1 -->
+          <div style="background:var(--bg2);border:1px dashed rgba(232,160,32,0.3);border-radius:8px;aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="12" r="6" stroke="#E8A020" stroke-width="1" opacity="0.5"/><path d="M6 28c0-5.523 4.477-10 10-10s10 4.477 10 10" stroke="#E8A020" stroke-width="1" opacity="0.5" stroke-linecap="round"/></svg>
+            <span style="font-family:var(--mono);font-size:8px;color:var(--muted2);text-align:center;letter-spacing:0.06em;">add portrait here<br>replace with &lt;img&gt;</span>
+          </div>
+          <!-- Placeholder 2 -->
+          <div style="background:var(--bg2);border:1px dashed rgba(232,160,32,0.3);border-radius:8px;aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M6 26l5-8 4 5 3-3 8 6" stroke="#E8A020" stroke-width="1" opacity="0.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="4" width="24" height="24" rx="4" stroke="#E8A020" stroke-width="1" opacity="0.3"/></svg>
+            <span style="font-family:var(--mono);font-size:8px;color:var(--muted2);text-align:center;letter-spacing:0.06em;">add caricature here<br>replace with &lt;img&gt;</span>
+          </div>
+          <!-- Placeholder 3 -->
+          <div style="background:var(--bg2);border:1px dashed rgba(232,160,32,0.3);border-radius:8px;aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px;">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M8 20 Q12 8 16 16 Q20 24 24 12" stroke="#E8A020" stroke-width="1" opacity="0.5" stroke-linecap="round" fill="none"/><circle cx="8" cy="20" r="2" fill="#E8A020" opacity="0.4"/></svg>
+            <span style="font-family:var(--mono);font-size:8px;color:var(--muted2);text-align:center;letter-spacing:0.06em;">add doodle here<br>replace with &lt;img&gt;</span>
+          </div>
+        </div>
+        <p style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:10px;letter-spacing:0.05em;">
+          // to add your drawings: save as assets/draw-1.jpg, draw-2.jpg, draw-3.jpg and replace the placeholder divs with &lt;img&gt; tags
+        </p>
       </div>
     </section>
 
@@ -1349,13 +1638,14 @@
 
     document.querySelectorAll('.pub-timeline').forEach(el => barObserver.observe(el));
 
-    // Render citations-per-year bar chart
-    // UPDATE THESE to match your Google Scholar profile
+    // Render citations-per-year bar chart — real data from Google Scholar
     const citsByYear = {
-      2021: 2,
-      2022: 6,
-      2023: 12,
-      2024: 15,
+      2021: 1,
+      2022: 1,
+      2023: 9,
+      2024: 22,
+      2025: 33,
+      2026: 12,
     };
 
     const maxCit = Math.max(...Object.values(citsByYear));
