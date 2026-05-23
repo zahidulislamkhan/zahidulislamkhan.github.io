@@ -81,12 +81,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 56px;
+      height: 60px;
     }
 
     .nav-logo {
       font-family: var(--mono);
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text);
       letter-spacing: 0.02em;
     }
@@ -101,7 +101,7 @@
 
     .nav-links a {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       text-decoration: none;
       letter-spacing: 0.08em;
@@ -139,7 +139,7 @@
 
     .section-tag {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 12px;
       color: var(--purple);
       letter-spacing: 0.14em;
       text-transform: lowercase;
@@ -234,7 +234,7 @@
 
     .hero-photo-caption {
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 11px;
       color: var(--muted);
       letter-spacing: 0.08em;
       text-align: center;
@@ -243,7 +243,7 @@
 
     .hero-eyebrow {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 13px;
       color: var(--muted);
       letter-spacing: 0.1em;
       margin-bottom: 1.5rem;
@@ -272,7 +272,7 @@
     }
 
     .hero-bio {
-      font-size: 15px;
+      font-size: 17px;
       color: var(--muted2);
       max-width: 520px;
       line-height: 1.8;
@@ -291,10 +291,10 @@
       gap: 8px;
       background: var(--purple);
       color: #fff;
-      padding: 10px 22px;
+      padding: 11px 24px;
       border-radius: 6px;
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 13px;
       letter-spacing: 0.04em;
       text-decoration: none;
       transition: background 0.2s, transform 0.15s;
@@ -308,11 +308,11 @@
       gap: 8px;
       background: transparent;
       color: var(--muted2);
-      padding: 10px 22px;
+      padding: 11px 24px;
       border-radius: 6px;
       border: 1px solid var(--border2);
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 13px;
       letter-spacing: 0.04em;
       text-decoration: none;
       transition: border-color 0.2s, color 0.2s, transform 0.15s;
@@ -328,28 +328,28 @@
       border: 1px solid var(--border);
       border-radius: 10px;
       overflow: hidden;
-      min-width: 160px;
+      min-width: 170px;
     }
 
     .hero-stat {
       background: var(--bg2);
-      padding: 16px 20px;
+      padding: 18px 22px;
     }
 
     .hero-stat-n {
       font-family: var(--serif);
-      font-size: 30px;
+      font-size: 32px;
       font-weight: 300;
       color: var(--text);
       line-height: 1;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
     }
 
-    .hero-stat-n span { color: var(--purple); font-size: 18px; }
+    .hero-stat-n span { color: var(--purple); font-size: 20px; }
 
     .hero-stat-l {
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 11px;
       color: var(--muted);
       letter-spacing: 0.1em;
       text-transform: lowercase;
@@ -376,7 +376,7 @@
     h2 em { font-style: italic; color: var(--purple2); }
 
     p {
-      font-size: 15px;
+      font-size: 16px;
       color: var(--muted2);
       line-height: 1.85;
       margin-bottom: 1rem;
@@ -392,7 +392,7 @@
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 10px 14px;
+      padding: 12px 16px;
       transition: border-color 0.2s;
     }
 
@@ -400,20 +400,19 @@
 
     .skill-item-label {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 11px;
       color: var(--purple);
       letter-spacing: 0.06em;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
     }
 
     .skill-item-val {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--muted2);
     }
 
     /* ── BILATERAL CENTRE-SPINE TIMELINE ── */
 
-    /* shared by pub-timeline, .timeline (experience/volunteering/conferences) */
     .pub-timeline, .timeline {
       position: relative;
       margin-top: 1.5rem;
@@ -432,7 +431,6 @@
       );
     }
 
-    /* Each row: left-card | centre-axis | right-card */
     .pub-entry, .timeline-item {
       position: relative;
       display: grid;
@@ -444,7 +442,6 @@
 
     .pub-entry:last-child, .timeline-item:last-child { margin-bottom: 0; }
 
-    /* Centre column: year label + dot */
     .pub-entry-year, .timeline-axis {
       display: flex;
       flex-direction: column;
@@ -457,7 +454,7 @@
 
     .pub-entry-year-label, .timeline-axis-year {
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 10px;
       color: var(--purple);
       letter-spacing: 0.06em;
       background: var(--bg);
@@ -480,7 +477,6 @@
     .pub-entry:hover .pub-entry-dot,
     .timeline-item:hover .timeline-axis-dot { background: var(--purple); }
 
-    /* Left / right card columns */
     .pub-entry-left, .timeline-left {
       padding-right: 18px;
       display: flex;
@@ -508,33 +504,33 @@
 
     .pub-card:hover { border-color: var(--border2); background: var(--bg3); }
 
-    .pub-card-body { padding: 14px 16px 12px; }
+    .pub-card-body { padding: 16px 18px 13px; }
 
     .pub-card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 8px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .pub-year-badge {
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 10px;
       color: var(--purple2);
       background: var(--purple3);
       border: 1px solid rgba(232,160,32,0.2);
-      padding: 2px 6px;
+      padding: 3px 7px;
       border-radius: 3px;
       letter-spacing: 0.05em;
       flex-shrink: 0;
     }
 
     .pub-title {
-      font-size: 12px;
+      font-size: 14px;
       color: var(--text);
       line-height: 1.55;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       font-weight: 400;
     }
 
@@ -548,15 +544,15 @@
 
     .pub-journal {
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 10px;
       color: var(--muted2);
       letter-spacing: 0.02em;
     }
 
     .pub-tag {
       font-family: var(--mono);
-      font-size: 8px;
-      padding: 2px 6px;
+      font-size: 9px;
+      padding: 2px 7px;
       border-radius: 3px;
       background: var(--purple3);
       color: var(--purple2);
@@ -565,7 +561,7 @@
 
     .pub-cit {
       border-top: 1px solid var(--border);
-      padding: 7px 16px;
+      padding: 8px 18px;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -573,7 +569,7 @@
 
     .pub-cit-label {
       font-family: var(--mono);
-      font-size: 8px;
+      font-size: 9px;
       color: var(--muted2);
       letter-spacing: 0.06em;
       white-space: nowrap;
@@ -597,7 +593,7 @@
 
     .pub-cit-count {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 11px;
       color: var(--purple2);
       min-width: 20px;
       text-align: right;
@@ -609,7 +605,7 @@
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 20px 24px;
+      padding: 22px 26px;
     }
 
     .cit-chart-header {
@@ -621,14 +617,14 @@
 
     .cit-chart-title {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 11px;
       color: var(--muted2);
       letter-spacing: 0.1em;
     }
 
     .cit-chart-total {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       color: var(--purple2);
     }
 
@@ -636,7 +632,7 @@
       display: flex;
       align-items: flex-end;
       gap: 6px;
-      height: 60px;
+      height: 70px;
     }
 
     .cit-bar-col {
@@ -644,7 +640,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       height: 100%;
       justify-content: flex-end;
     }
@@ -662,7 +658,7 @@
 
     .cit-bar-year {
       font-family: var(--mono);
-      font-size: 8px;
+      font-size: 9px;
       color: var(--muted2);
       letter-spacing: 0.04em;
     }
@@ -677,8 +673,8 @@
 
     .interest-tag {
       font-family: var(--mono);
-      font-size: 11px;
-      padding: 6px 14px;
+      font-size: 12px;
+      padding: 7px 16px;
       border-radius: 20px;
       border: 1px solid var(--border2);
       color: var(--muted2);
@@ -693,7 +689,7 @@
       background: var(--bg2);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 14px 16px;
+      padding: 16px 18px;
       transition: border-color 0.25s, background 0.25s;
       width: 100%;
     }
@@ -708,16 +704,16 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 8px;
-      margin-bottom: 6px;
+      margin-bottom: 7px;
       flex-wrap: wrap;
     }
 
     .timeline-badge {
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 10px;
       letter-spacing: 0.08em;
       text-transform: lowercase;
-      padding: 3px 8px;
+      padding: 4px 10px;
       border-radius: 20px;
       flex-shrink: 0;
     }
@@ -729,34 +725,34 @@
 
     .timeline-date {
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 10px;
       color: var(--muted2);
       letter-spacing: 0.05em;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
 
     .timeline-role {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 400;
       color: var(--text);
-      margin-bottom: 3px;
+      margin-bottom: 4px;
       line-height: 1.35;
     }
 
     .timeline-org {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 11px;
       color: var(--purple);
-      margin-bottom: 7px;
+      margin-bottom: 8px;
       letter-spacing: 0.03em;
     }
 
     .timeline-desc {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--muted2);
-      line-height: 1.7;
+      line-height: 1.75;
       border-top: 1px solid var(--border);
-      padding-top: 7px;
+      padding-top: 8px;
     }
 
     /* ── CONTACT ── */
@@ -771,14 +767,14 @@
 
     .contact-link {
       background: var(--bg2);
-      padding: 14px 20px;
+      padding: 16px 22px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       text-decoration: none;
       color: var(--muted2);
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 13px;
       letter-spacing: 0.03em;
       transition: background 0.2s, color 0.2s;
     }
@@ -788,13 +784,13 @@
     .contact-link-label { display: flex; align-items: center; gap: 10px; }
 
     .contact-link-dot {
-      width: 6px; height: 6px;
+      width: 7px; height: 7px;
       border-radius: 50%;
       background: var(--purple3);
       border: 1px solid var(--purple);
     }
 
-    .contact-link-arrow { color: var(--muted); font-size: 14px; transition: transform 0.2s, color 0.2s; }
+    .contact-link-arrow { color: var(--muted); font-size: 16px; transition: transform 0.2s, color 0.2s; }
     .contact-link:hover .contact-link-arrow { transform: translateX(3px); color: var(--purple); }
 
     /* ── FOOTER ── */
@@ -810,7 +806,7 @@
 
     .footer-left {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       letter-spacing: 0.04em;
     }
@@ -819,7 +815,7 @@
 
     .footer-right {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 11px;
       color: var(--muted);
       letter-spacing: 0.06em;
     }
@@ -844,7 +840,6 @@
       .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .nav-links { gap: 12px; }
       h1 { font-size: 2.8rem; }
-      /* collapse bilateral timelines to single left-spine on mobile */
       .pub-entry, .timeline-item {
         grid-template-columns: 28px 1fr;
         grid-template-rows: auto;
@@ -895,7 +890,6 @@
 
       <div class="hero-photo-col">
         <div class="hero-photo-frame">
-          <!-- Replace the placeholder below with: <img src="assets/photo.jpg" alt="Zahidul Islam Khan"> -->
           <img src="assets/photo.jpg" alt="Zahidul Islam Khan">
         </div>
         <div class="hero-photo-caption">
@@ -934,7 +928,7 @@
           <div class="hero-stat-l">years experience</div>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-n" style="font-size:16px; padding-top:6px">Oulu<span style="font-size:12px">, FI</span></div>
+          <div class="hero-stat-n" style="font-size:17px; padding-top:6px">Oulu<span style="font-size:13px">, FI</span></div>
           <div class="hero-stat-l">based in</div>
         </div>
       </div>
@@ -1005,7 +999,7 @@
       </div>
     </section>
 
-        <!-- RESEARCH -->
+    <!-- RESEARCH -->
     <section id="research">
       <div class="section-tag">research</div>
       <h2>Published <em>work</em></h2>
@@ -1193,6 +1187,7 @@
           <div class="pub-entry-empty"></div>
         </div>
 
+      </div>
      
       <!-- Citations per year chart -->
       <div class="cit-chart-wrap fade-in">
@@ -1459,7 +1454,7 @@
 
       <!-- VALORANT -->
       <div style="margin-bottom:4rem;" class="fade-in">
-        <div style="font-family:var(--mono);font-size:10px;color:var(--purple);letter-spacing:0.12em;margin-bottom:1.25rem;">// valorant</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--purple);letter-spacing:0.12em;margin-bottom:1.25rem;">// valorant</div>
         <div style="display:grid;grid-template-columns:1fr auto;gap:2.5rem;align-items:start;">
           <div>
             <p style="margin-bottom:1rem;">
@@ -1470,7 +1465,7 @@
               drifted apart. I still load in solo sometimes, just to unwind. It's not the same,
               but the muscle memory's still there (feels like!).
             </p>
-            <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);letter-spacing:0.06em;">peak rank achieved</div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);letter-spacing:0.06em;">peak rank achieved</div>
             <!-- Platinum 3 rank display -->
             <div style="display:flex;align-items:center;gap:14px;margin-top:10px;">
               <img src="assets/platinum3.png"
@@ -1483,8 +1478,8 @@
                 <line x1="14" y1="38" x2="34" y2="38" stroke="#7EC8E3" stroke-width="1" opacity="0.5"/>
               </svg>
               <div>
-                <div style="font-size:18px;font-family:var(--serif);color:var(--text);font-style:italic;">Platinum III</div>
-                <div style="font-family:var(--mono);font-size:10px;color:var(--muted2);margin-top:2px;">competitive · solo · squad</div>
+                <div style="font-size:19px;font-family:var(--serif);color:var(--text);font-style:italic;">Platinum III</div>
+                <div style="font-family:var(--mono);font-size:11px;color:var(--muted2);margin-top:2px;">competitive · solo · squad</div>
               </div>
             </div>
           </div>
@@ -1495,28 +1490,20 @@
               style="width:120px;height:auto;opacity:0.9">
               <!-- Valorant-style geometric agent -->
               <rect x="0" y="0" width="120" height="130" rx="8" fill="#0F1923"/>
-              <!-- Body -->
               <polygon points="60,18 78,30 78,65 60,75 42,65 42,30" fill="#1A2634" stroke="#E8A020" stroke-width="1"/>
-              <!-- Head -->
               <circle cx="60" cy="16" r="10" fill="#1A2634" stroke="#E8A020" stroke-width="1"/>
-              <!-- Eyes glow -->
               <circle cx="56" cy="15" r="2" fill="#E8A020" opacity="0.9"/>
               <circle cx="64" cy="15" r="2" fill="#E8A020" opacity="0.9"/>
-              <!-- Weapon -->
               <rect x="78" y="44" width="28" height="5" rx="2" fill="#E8A020" opacity="0.8"/>
               <rect x="94" y="42" width="8" height="2" rx="1" fill="#F0B84A"/>
-              <!-- Legs -->
               <line x1="50" y1="75" x2="46" y2="100" stroke="#E8A020" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
               <line x1="70" y1="75" x2="74" y2="100" stroke="#E8A020" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
-              <!-- Feet -->
               <rect x="40" y="99" width="12" height="4" rx="2" fill="#E8A020" opacity="0.6"/>
               <rect x="68" y="99" width="12" height="4" rx="2" fill="#E8A020" opacity="0.6"/>
-              <!-- Crosshair overlay -->
               <line x1="10" y1="115" x2="110" y2="115" stroke="#E8A020" stroke-width="0.5" opacity="0.3"/>
               <circle cx="60" cy="115" r="4" fill="none" stroke="#E8A020" stroke-width="0.5" opacity="0.5"/>
               <line x1="56" y1="115" x2="64" y2="115" stroke="#E8A020" stroke-width="1" opacity="0.6"/>
               <line x1="60" y1="111" x2="60" y2="119" stroke="#E8A020" stroke-width="1" opacity="0.6"/>
-              <!-- Label -->
               <text x="60" y="128" text-anchor="middle" fill="#E8A020" font-size="7" font-family="monospace" opacity="0.6">VALORANT</text>
             </svg>
           </div>
@@ -1525,7 +1512,7 @@
 
       <!-- DRAWING -->
       <div class="fade-in">
-        <div style="font-family:var(--mono);font-size:10px;color:var(--purple);letter-spacing:0.12em;margin-bottom:1.25rem;">// portraits &amp; doodles</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--purple);letter-spacing:0.12em;margin-bottom:1.25rem;">// portraits &amp; doodles</div>
         <p style="margin-bottom:1.5rem;">
           Drawing has always been a quiet hobby — portraits, caricatures, and random doodles
           that come out of nowhere. There's something satisfying about reducing a face down to
@@ -1536,49 +1523,36 @@
         <!-- Drawing carousel -->
         <div style="position:relative;margin-top:1rem;padding:0 40px;">
  
-          <!-- Track — clips overflow, shows one slide at a time -->
           <div id="dc-track" style="overflow:hidden;border-radius:10px;">
             <div id="dc-inner" style="display:flex;transition:transform 0.45s cubic-bezier(0.4,0,0.2,1);">
  
-              <!-- SLIDE 1 — replace div with <img src="assets/draw-1.jpg" ...> when ready -->
               <div class="dc-slide" style="flex:0 0 100%;min-width:0;">
                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;border-radius:10px;">
-                  <img src="assets/draw-1.jpg"
-                    style="width:100%;max-width:340px;border-radius:10px;display:block;">
+                  <img src="assets/draw-1.jpg" style="width:100%;max-width:340px;border-radius:10px;display:block;">
+                </div>
+              </div>
+ 
+              <div class="dc-slide" style="flex:0 0 100%;min-width:0;">
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;border-radius:10px;">
+                  <img src="assets/draw-2.jpg" style="width:100%;max-width:340px;border-radius:10px;display:block;">
+                </div>
+              </div>
+ 
+              <div class="dc-slide" style="flex:0 0 100%;min-width:0;">
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;border-radius:10px;">
+                  <img src="assets/draw-3.png" style="width:100%;max-width:340px;border-radius:10px;display:block;">
                 </div>
               </div>
 
- 
-              <!-- SLIDE 2 -->
               <div class="dc-slide" style="flex:0 0 100%;min-width:0;">
                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;border-radius:10px;">
-                  <img src="assets/draw-2.jpg"
-                    style="width:100%;max-width:340px;border-radius:10px;display:block;">
+                  <img src="assets/draw-4.jpg" style="width:100%;max-width:340px;border-radius:10px;display:block;">
                 </div>
               </div>
- 
-              <!-- SLIDE 3 -->
-              <div class="dc-slide" style="flex:0 0 100%;min-width:0;">
-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;border-radius:10px;">
-                  <img src="assets/draw-3.png"
-                    style="width:100%;max-width:340px;border-radius:10px;display:block;">
-                </div>
-              </div>
-
-            <!-- SLIDE 4 -->
-              <div class="dc-slide" style="flex:0 0 100%;min-width:0;">
-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:40px 20px;border-radius:10px;">
-                  <img src="assets/draw-4.jpg"
-                    style="width:100%;max-width:340px;border-radius:10px;display:block;">
-                </div>
-              </div>
- 
-              <!-- Add more slides here — copy a dc-slide div above, change the image -->
  
             </div>
           </div>
  
-          <!-- Prev button -->
           <button id="dc-prev" onclick="dcMove(-1)" aria-label="Previous drawing"
             style="position:absolute;left:0;top:50%;transform:translateY(-50%);
                    width:34px;height:34px;border-radius:50%;
@@ -1587,7 +1561,6 @@
                    cursor:pointer;display:flex;align-items:center;justify-content:center;
                    transition:background 0.2s,border-color 0.2s;">‹</button>
  
-          <!-- Next button -->
           <button id="dc-next" onclick="dcMove(1)" aria-label="Next drawing"
             style="position:absolute;right:0;top:50%;transform:translateY(-50%);
                    width:34px;height:34px;border-radius:50%;
@@ -1597,15 +1570,10 @@
                    transition:background 0.2s,border-color 0.2s;">›</button>
         </div>
  
-        <!-- Dot indicators + counter -->
         <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:14px;">
           <div id="dc-dots" style="display:flex;gap:7px;"></div>
-          <span id="dc-counter" style="font-family:var(--mono);font-size:9px;color:var(--muted2);letter-spacing:0.06em;"></span>
+          <span id="dc-counter" style="font-family:var(--mono);font-size:10px;color:var(--muted2);letter-spacing:0.06em;"></span>
         </div>
- 
-        <p style="font-family:var(--mono);font-size:9px;color:var(--muted2);margin-top:14px;letter-spacing:0.05em;">
-          <!--// to add drawings: save as assets/draw-1.jpg etc., replace the placeholder divs with &lt;img src="assets/draw-N.jpg" style="width:100%;border-radius:10px;display:block;"&gt;>
-        </p>
       </div>
     </section>
 
@@ -1620,7 +1588,7 @@
             methodologies, public health, or biomedical data science. Feel free to
             reach out via email or find me on any of the platforms below.
           </p>
-          <p style="font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 1.5rem;">
+          <p style="font-family: var(--mono); font-size: 13px; color: var(--muted); margin-top: 1.5rem;">
             // best reached by email
           </p>
         </div>
@@ -1668,7 +1636,6 @@
   </footer>
 
   <script>
-    // Intersection observer for fade-in animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
@@ -1680,7 +1647,6 @@
  
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
  
-    // Animate citation bars when they scroll into view
     const barObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -1694,7 +1660,6 @@
  
     document.querySelectorAll('.pub-timeline').forEach(el => barObserver.observe(el));
  
-    // Render citations-per-year bar chart — real data from Google Scholar
     const citsByYear = {
       2021: 1,
       2022: 1,
@@ -1732,7 +1697,6 @@
       chartObserver.observe(chartEl);
     }
  
-    // Active nav link on scroll
     const sections = document.querySelectorAll('section[id]');
     const navLinks = document.querySelectorAll('.nav-links a');
  
@@ -1748,11 +1712,10 @@
  
     sections.forEach(s => navObserver.observe(s));
  
-    // Nav link active style
     const style = document.createElement('style');
     style.textContent = `.nav-links a.active { color: var(--purple); } .nav-links a.active::before { opacity: 1; }`;
     document.head.appendChild(style);
-    // ── Drawing carousel ──
+
     (function() {
       const inner   = document.getElementById('dc-inner');
       const dotsEl  = document.getElementById('dc-dots');
@@ -1763,7 +1726,6 @@
       let cur = 0;
       const total = slides.length;
  
-      // Build dots
       slides.forEach((_, i) => {
         const d = document.createElement('div');
         d.style.cssText = 'width:6px;height:6px;border-radius:50%;cursor:pointer;transition:background 0.2s,transform 0.2s;';
@@ -1783,7 +1745,6 @@
       function goTo(n) { cur = ((n % total) + total) % total; updateUI(); }
       window.dcMove = function(dir) { goTo(cur + dir); };
  
-      // Swipe support for touch screens
       let startX = 0;
       const track = document.getElementById('dc-track');
       track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
@@ -1794,7 +1755,6 @@
  
       updateUI();
     })();
- 
   </script>
 
 </body>
