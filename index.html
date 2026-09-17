@@ -26,6 +26,7 @@
       --muted:    #6B5B42;
       --muted2:   #C4AA88;
       --green:    #E8A020;
+      --axis:     rgba(232,160,32,0.30);
       --mono:     'IBM Plex Mono', monospace;
       --serif:    'Fraunces', serif;
       --sans:     'Outfit', sans-serif;
@@ -419,18 +420,30 @@
       margin-top: 1.5rem;
     }
 
-    .pub-timeline::before, .timeline::before {
+    /* Connector line between the year dots. Drawn per entry rather than on the
+       container so each section gets its own line, running from the first dot's
+       centre to the last dot's centre instead of past both ends.
+       34.5px = 10px axis padding + 14px year label + 5px gap + half of the 11px dot. */
+    .pub-entry::before, .timeline-item::before {
       content: '';
       position: absolute;
       left: 50%;
-      top: 0; bottom: 0;
+      top: 0;
+      bottom: -2rem;
       width: 1px;
       transform: translateX(-50%);
-      background: linear-gradient(to bottom,
-        transparent 0%, var(--border2) 5%,
-        var(--border2) 95%, transparent 100%
-      );
+      background: var(--axis);
+      z-index: 0;
     }
+
+    .pub-entry:first-child::before,
+    .timeline-item:first-child::before { top: 34.5px; }
+
+    .pub-entry:last-child::before,
+    .timeline-item:last-child::before { bottom: auto; height: 34.5px; }
+
+    .pub-entry:first-child:last-child::before,
+    .timeline-item:first-child:last-child::before { display: none; }
 
     .pub-entry, .timeline-item {
       position: relative;
@@ -967,7 +980,7 @@
         padding-top: 10px;
       }
       .pub-entry-empty, .timeline-empty { display: none; }
-      .pub-timeline::before, .timeline::before { left: 13px; }
+      .pub-entry::before, .timeline-item::before { left: 14px; }
     }
 
     @media (max-width: 520px) {
