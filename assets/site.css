@@ -51,15 +51,6 @@ nav {
   height: 60px;
 }
 
-.nav-logo {
-  font-family: var(--mono);
-  font-size: 15px;
-  text-decoration: none;
-  color: var(--text);
-  letter-spacing: 0.02em;
-}
-
-.nav-logo span { color: var(--purple); }
 
 .nav-links {
   display: flex;
@@ -275,6 +266,8 @@ h1 em {
   text-decoration: none;
   transition: border-color 0.2s, color 0.2s, transform 0.15s;
 }
+
+.btn-ghost { cursor: pointer; font-family: var(--mono); }
 
 .btn-ghost:hover { border-color: var(--purple); color: var(--text); transform: translateY(-1px); }
 
@@ -1296,6 +1289,9 @@ footer {
 a.feed-row { text-decoration: none; color: inherit; }
 a.feed-row:hover .feed-t { color: var(--purple2); }
 a.feed-row:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; border-radius: 6px; }
+.feed-more { display: flex; justify-content: center; margin-top: 1.75rem; }
+.feed-more[hidden] { display: none; }
+
 .feed-go { font-family: var(--mono); font-size: 15px; color: var(--muted); transition: transform 0.18s, color 0.18s; }
 a.feed-row:hover .feed-go { color: var(--purple); transform: translateX(3px); }
 

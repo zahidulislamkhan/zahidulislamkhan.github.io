@@ -194,15 +194,34 @@
     var act = el('section', null); act.id = 'activity';
     head(act, 'Recent', 'Recent <em>updates</em>');
     var feed = el('div', 'feed fade-in');
-    feed.innerHTML = feedItems.slice(0, 3).map(function (f) {
-      return '<a class="feed-row" href="' + f.page + '#' + slug(f.key || f.t) + '">' +
-        '<div class="feed-when">' + esc(f.when) + '</div>' +
-        '<div><span class="timeline-badge ' + f.tone + ' feed-cat">' + esc(f.cat) + '</span></div>' +
-        '<div><div class="feed-t">' + esc(f.t) + '</div>' +
-        '<div class="feed-s">' + esc(f.s) + '</div></div>' +
-        '<div class="feed-go">→</div></a>';
-    }).join('');
     act.appendChild(feed);
+
+    /* three at a time, until there is nothing left to show */
+    var STEP = 3, shown = 0;
+    var moreWrap = el('div', 'feed-more');
+    var moreBtn = el('button', 'btn-ghost', 'See more');
+    moreBtn.type = 'button';
+
+    function showMore() {
+      feedItems.slice(shown, shown + STEP).forEach(function (f) {
+        feed.insertAdjacentHTML('beforeend',
+          '<a class="feed-row" href="' + f.page + '#' + slug(f.key || f.t) + '">' +
+          '<div class="feed-when">' + esc(f.when) + '</div>' +
+          '<div><span class="timeline-badge ' + f.tone + ' feed-cat">' + esc(f.cat) + '</span></div>' +
+          '<div><div class="feed-t">' + esc(f.t) + '</div>' +
+          '<div class="feed-s">' + esc(f.s) + '</div></div>' +
+          '<div class="feed-go">\u2192</div></a>');
+      });
+      shown = Math.min(shown + STEP, feedItems.length);
+      var left = feedItems.length - shown;
+      moreBtn.textContent = 'See more (' + left + ')';
+      moreWrap.hidden = left === 0;
+    }
+
+    moreBtn.addEventListener('click', showMore);
+    showMore();
+    moreWrap.appendChild(moreBtn);
+    act.appendChild(moreWrap);
     root.appendChild(act);
 
     /* overview */
