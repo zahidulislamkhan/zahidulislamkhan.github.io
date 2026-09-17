@@ -1,128 +1,79 @@
-/* Renders every page from assets/data.js. Each route is guarded, so a page
-   only builds what its markup asks for via <body data-page="…">. */
+/* Every page is built from assets/data.js. Pages carry <body data-page="…">
+   and a #app mount; each route is guarded so nothing runs where it doesn't
+   belong. Edit content in data.js — never in the markup. */
 (function () {
   'use strict';
-  var S = SITE;
+  var S = SITE, P = S.profile;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var P = S.profile;
 
-  /* ── helpers ──────────────────────────────────────────────────────── */
-  function el(tag, cls, text) {
-    var n = document.createElement(tag);
-    if (cls) n.className = cls;
-    if (text != null) n.textContent = text;
-    return n;
-  }
+  function el(t, c, x) { var n = document.createElement(t); if (c) n.className = c; if (x != null) n.textContent = x; return n; }
   function esc(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
-  function pid(i) { return '0x' + String(i).padStart(4, '0'); }
   function yearOf(s) { var m = String(s).match(/(\d{4})/g); return m ? +m[m.length - 1] : 0; }
+  function ext(u) { return u && u.indexOf('http') === 0 ? ' target="_blank" rel="noopener"' : ''; }
 
-  /* ── terminal window chrome ───────────────────────────────────────── */
-  function term(o) {
-    var t = el('div', 'term');
-    t.appendChild(el('div', 'term-strip'));
-
-    var bar = el('div', 'term-bar');
-    bar.innerHTML = '<span class="dots"><i></i><i></i><i></i></span>' +
-      '<span class="term-title">' + o.title + '</span>' +
-      '<span class="term-clock" data-clock></span>';
-    t.appendChild(bar);
-
-    if (o.meta) {
-      var meta = el('div', 'term-meta');
-      meta.innerHTML = '<span><b>' + esc(P.user) + '</b></span>' + o.meta +
-        '<span class="path">' + esc(o.path || '~') + '</span>';
-      t.appendChild(meta);
-    }
-
-    var body = el('div', 'term-body');
-    t.appendChild(body);
-
-    if (o.foot) {
-      var foot = el('div', 'term-foot');
-      foot.innerHTML = o.foot;
-      t.appendChild(foot);
-    }
-    if (o.prompt !== false) {
-      var pr = el('div', 'term-prompt');
-      pr.innerHTML = '<span><span class="who">' + esc(P.user) + '@' + esc(P.host) + '</span>:' +
-        '<span class="where">' + esc(o.path || '~') + '</span>$ ' + (o.hint || '') + '</span>' +
-        '<span class="cursor"></span>';
-      t.appendChild(pr);
-    }
-    t.bodyEl = body;
-    return t;
+  function head(root, tag, title, intro) {
+    var h = el('div');
+    h.innerHTML = '<div class="section-tag">' + esc(tag) + '</div><h2>' + title + '</h2>' +
+      (intro ? '<p class="page-intro">' + intro + '</p>' : '');
+    root.appendChild(h);
+    return h;
   }
 
-  function table(cols) {
-    var wrap = el('div', 'tbl-wrap');
-    var tb = el('table', 'tbl');
-    tb.innerHTML = '<thead><tr>' + cols.map(function (c) {
-      return '<th' + (c.num ? ' class="num"' : '') + '>' + esc(c.label) + '</th>';
-    }).join('') + '</tr></thead><tbody></tbody>';
-    wrap.appendChild(tb);
-    wrap.body = tb.querySelector('tbody');
-    return wrap;
-  }
-
-  /* one expandable row: `make` returns the <tr>, detail is built lazily */
-  function expandable(tr, span, buildDetail) {
-    var btn = el('button', 'expand', '[+]');
+  /* ── an expandable block appended to a card ───────────────────────── */
+  function addExpand(card, label, build) {
+    var btn = el('button', 'card-more');
     btn.type = 'button';
     btn.setAttribute('aria-expanded', 'false');
-    var cell = el('td', 'num');
-    cell.appendChild(btn);
-    tr.appendChild(cell);
-
-    var detail = null;
+    btn.innerHTML = '<b>[+]</b>' + esc(label);
+    var panel = null;
     btn.addEventListener('click', function () {
-      var open = btn.getAttribute('aria-expanded') === 'true';
-      if (open) {
-        detail.remove(); detail = null;
-        btn.textContent = '[+]'; btn.setAttribute('aria-expanded', 'false');
-        tr.classList.remove('open');
+      if (panel) {
+        panel.remove(); panel = null;
+        btn.innerHTML = '<b>[+]</b>' + esc(label);
+        btn.setAttribute('aria-expanded', 'false');
         return;
       }
-      detail = el('tr', 'detail');
-      var td = el('td');
-      td.colSpan = span;
-      var inner = el('div', 'detail-in');
-      buildDetail(inner);
-      td.appendChild(inner);
-      detail.appendChild(td);
-      tr.parentNode.insertBefore(detail, tr.nextSibling);
-      btn.textContent = '[-]'; btn.setAttribute('aria-expanded', 'true');
-      tr.classList.add('open');
+      panel = el('div', 'card-detail');
+      build(panel);
+      card.appendChild(panel);
+      btn.innerHTML = '<b>[−]</b>' + esc(label);
+      btn.setAttribute('aria-expanded', 'true');
     });
+    card.appendChild(btn);
   }
 
-  function chips(list, tone) {
-    var c = el('div', 'chips');
-    list.forEach(function (x) { c.appendChild(el('span', 'chip ' + tone, x)); });
-    return c;
+  /* ── bilateral timeline scaffold: entry N sits left when N is even ── */
+  function entry(cls, yearLabels, card, i) {
+    var row = el('div', cls.row);
+    var axis = el('div', cls.axis);
+    axis.innerHTML = yearLabels.map(function (y, n) {
+      return '<div class="' + cls.year + '">' + esc(y) + '</div>' +
+        (n === 0 ? '<div class="' + cls.dot + '"></div>' : '');
+    }).join('');
+    var side = el('div', i % 2 === 0 ? cls.left : cls.right);
+    side.appendChild(card);
+    var blank = el('div', cls.empty);
+    if (i % 2 === 0) { row.appendChild(side); row.appendChild(axis); row.appendChild(blank); }
+    else { row.appendChild(blank); row.appendChild(axis); row.appendChild(side); }
+    return row;
   }
 
-  function section(h, title, subtitle) {
-    var head = el('div', 'phead');
-    head.innerHTML = '<h1><span class="sig">$</span>' + title + '</h1>' +
-      (subtitle ? '<p>' + subtitle + '</p>' : '');
-    h.appendChild(head);
-  }
+  var PUB = { row: 'pub-entry', axis: 'pub-entry-year', year: 'pub-entry-year-label',
+              dot: 'pub-entry-dot', left: 'pub-entry-left', right: 'pub-entry-right', empty: 'pub-entry-empty' };
+  var TL  = { row: 'timeline-item', axis: 'timeline-axis', year: 'timeline-axis-year',
+              dot: 'timeline-axis-dot', left: 'timeline-left', right: 'timeline-right', empty: 'timeline-empty' };
 
-  /* ── nav, clock, lightbox ─────────────────────────────────────────── */
+  /* ── nav, lightbox, reveal ────────────────────────────────────────── */
   var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
   [].forEach.call(document.querySelectorAll('.nav-links a'), function (a) {
     if ((a.getAttribute('href') || '').toLowerCase() === here) {
       a.classList.add('active'); a.setAttribute('aria-current', 'page');
     }
   });
-
-  var toggle = document.getElementById('nav-toggle');
-  var menu = document.getElementById('nav-links');
+  var toggle = document.getElementById('nav-toggle'), menu = document.getElementById('nav-links');
   if (toggle && menu) {
     toggle.addEventListener('click', function () {
       var open = menu.getAttribute('data-open') === 'true';
@@ -131,388 +82,452 @@
     });
   }
 
-  function tickClocks() {
-    var now = new Date();
-    var s = [now.getHours(), now.getMinutes(), now.getSeconds()]
-      .map(function (n) { return String(n).padStart(2, '0'); }).join(':');
-    [].forEach.call(document.querySelectorAll('[data-clock]'), function (c) { c.textContent = s; });
-  }
-
   var lb = document.getElementById('lightbox');
   window.closeLightbox = function () {
     if (!lb) return;
-    lb.classList.remove('open');
-    document.body.style.overflow = '';
+    lb.classList.remove('open'); document.body.style.overflow = '';
   };
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { window.closeLightbox(); if (menu) menu.setAttribute('data-open', 'false'); }
+    if (e.key !== 'Escape') return;
+    window.closeLightbox();
+    if (menu) menu.setAttribute('data-open', 'false');
   });
   document.addEventListener('click', function (e) {
-    var img = e.target.closest('.poster, .tv-photo, .dc-slide img');
+    var img = e.target.closest('.conf-card-photo img, .tv-photo, .dc-slide img');
     if (!img || !lb) return;
     e.preventDefault(); e.stopPropagation();
     var full = document.getElementById('lightbox-img');
-    full.src = img.dataset.full || img.src;
-    full.alt = img.alt || '';
-    lb.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    full.src = img.dataset.full || img.src; full.alt = img.alt || '';
+    lb.classList.add('open'); document.body.style.overflow = 'hidden';
   });
+
+  function reveal(scope) {
+    var els = (scope || document).querySelectorAll('.fade-in');
+    if (reduce || !('IntersectionObserver' in window)) {
+      [].forEach.call(els, function (e) { e.classList.add('visible'); }); return;
+    }
+    var io = new IntersectionObserver(function (rows) {
+      rows.forEach(function (r, i) {
+        if (!r.isIntersecting) return;
+        setTimeout(function () { r.target.classList.add('visible'); }, i * 70);
+        io.unobserve(r.target);
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    [].forEach.call(els, function (e) { io.observe(e); });
+  }
+
+  function onView(node, fn) {
+    if (reduce || !('IntersectionObserver' in window)) { fn(); return; }
+    var io = new IntersectionObserver(function (rows) {
+      rows.forEach(function (r) { if (r.isIntersecting) { fn(); io.disconnect(); } });
+    }, { threshold: 0.2 });
+    io.observe(node);
+  }
 
   /* ── routes ───────────────────────────────────────────────────────── */
   var routes = {};
 
   routes.home = function (root) {
-    /* hero */
-    var hero = el('div', 'hero');
-    var left = el('div');
-    left.innerHTML =
-      '<div class="hero-line"><span class="sig">$</span>Hi there, I\'m <span class="name">' +
-        esc(P.name) + '</span></div>' +
-      '<div class="hero-sub"><span class="sig">$</span>' + esc(P.role) +
-        ' — <b>' + esc(P.tagline) + '</b></div>';
+    var words = P.name.split(' ');
+    var last = words.pop();
 
-    var cols = el('div', 'hero-cols');
-    var c1 = el('div', 'hero-col');
-    c1.innerHTML = '<h2>CURRENT RESEARCH</h2>' + S.current.map(function (x) {
-      return '<div class="hero-entry"><div class="t">' + esc(x.title) +
-        '</div><div class="n">' + esc(x.note) + '</div></div>';
-    }).join('');
-    var c2 = el('div', 'hero-col');
-    c2.innerHTML = '<h2>EDUCATION</h2>' + S.education.map(function (x) {
-      return '<div class="hero-entry"><div class="t">' + esc(x.degree) +
-        '</div><div class="n">' + esc(x.org) + ' · ' + esc(x.years) + '</div></div>';
-    }).join('');
-    cols.appendChild(c1); cols.appendChild(c2);
-    left.appendChild(cols);
-
-    var blurb = el('div', 'hero-blurb', P.blurb);
-    left.appendChild(blurb);
-
-    var side = el('div', 'hero-side');
-    side.innerHTML = '<img class="hero-photo" src="' + esc(P.photo) + '" alt="' + esc(P.name) + '" />' +
-      '<div class="hero-links">' + S.links.map(function (l) {
-        return '<a href="' + esc(l.url) + '"' +
-          (l.url.indexOf('http') === 0 ? ' target="_blank" rel="noopener"' : '') + '>' +
-          esc(l.label) + '</a>';
-      }).join('') + '</div>';
-
-    hero.appendChild(left); hero.appendChild(side);
+    var hero = el('section', null); hero.id = 'hero';
+    hero.innerHTML =
+      '<div class="hero-photo-col">' +
+        '<div class="hero-photo-frame"><img src="' + esc(P.photo) + '" alt="' + esc(P.name) + '" /></div>' +
+        '<div class="hero-photo-caption">' + esc(P.name) + '<br>' + esc(P.location) + '</div>' +
+      '</div>' +
+      '<div>' +
+        '<div class="hero-eyebrow">// ' + esc(P.role.toLowerCase()) + ' <span>▍</span></div>' +
+        '<h1>' + words.map(esc).join('<br>') + '<br><em>' + esc(last) + '</em></h1>' +
+        '<p class="hero-bio">' + esc(P.blurb) + '</p>' +
+        '<div class="hero-actions">' +
+          '<a href="research.html" class="btn-primary">View research →</a>' +
+          '<a href="assets/cv.pdf" class="btn-ghost" target="_blank">Download CV</a>' +
+        '</div>' +
+      '</div>' +
+      '<div class="hero-stats">' +
+        '<div class="hero-stat"><div class="hero-stat-n">' + P.stats.publications + '<span>+</span></div><div class="hero-stat-l">publications</div></div>' +
+        '<div class="hero-stat"><div class="hero-stat-n">' + P.stats.citations + '</div><div class="hero-stat-l">citations</div></div>' +
+        '<div class="hero-stat"><div class="hero-stat-n">' + P.stats.hindex + '</div><div class="hero-stat-l">h-index</div></div>' +
+        '<div class="hero-stat"><div class="hero-stat-n" style="font-size:17px;padding-top:6px">Oulu<span style="font-size:13px">, FI</span></div><div class="hero-stat-l">based in</div></div>' +
+      '</div>' +
+      '<div class="q-band">' +
+        '<div class="q-plot">' +
+          '<canvas id="q-canvas" role="img" aria-label="Scatter with quantile regression fits at tau 0.25, 0.50 and 0.75; the gap between fits widens as years of education increase."></canvas>' +
+          '<span class="q-lab y">age at first birth</span><span class="q-lab x">years of education →</span>' +
+        '</div>' +
+        '<div class="q-plot-foot">' +
+          '<div class="q-legend"><span><b class="thin"></b>τ = 0.25</span><span><b></b>τ = 0.50</span>' +
+            '<span><b class="thin"></b>τ = 0.75</span><span><b class="band"></b>interquartile band</span></div>' +
+          '<div class="q-note">quantile regression · <a href="https://doi.org/10.1016/j.heliyon.2021.e06547" target="_blank" rel="noopener">Heliyon 2021</a></div>' +
+        '</div>' +
+      '</div>';
     root.appendChild(hero);
 
-    /* recent updates feed */
-    var feed = [];
+    /* overview */
+    var ov = el('section', null); ov.id = 'overview';
+    head(ov, 'explore', 'Where to <em>next</em>',
+      'Every section has its own page. Pick one, or use the bar at the top.');
+    var grid = el('div', 'overview-grid fade-in');
+    grid.innerHTML = S.pages.map(function (p) {
+      return '<a class="ov-card" href="' + esc(p.href) + '">' +
+        '<div class="ov-name">' + esc(p.name) + ' <span>→</span></div>' +
+        '<div class="ov-desc">' + esc(p.desc) + '</div>' +
+        '<div class="ov-stat">' + esc(p.stat) + '</div></a>';
+    }).join('');
+    ov.appendChild(grid);
+    root.appendChild(ov);
+
+    /* recent activity — everything, newest first */
+    var feedItems = [];
     S.publications.forEach(function (p) {
-      feed.push({ y: p.year, when: String(p.year), cat: 'PUBLICATION', tone: 'blue',
-        t: p.title, s: p.journal, url: p.url, extra: p.cited + ' citations' });
+      feedItems.push({ y: p.year, when: String(p.year), cat: 'publication', tone: 'edu',
+        t: p.title, s: p.journal, url: p.url });
     });
     S.conferences.forEach(function (c) {
-      feed.push({ y: yearOf(c.date), when: c.date, cat: 'TALK', tone: 'purple',
-        t: c.title, s: c.venue, url: c.url, extra: c.badges.join(' · ') });
+      feedItems.push({ y: yearOf(c.date), when: c.date, cat: 'conference', tone: 'conf',
+        t: c.title, s: c.venue, url: c.url });
     });
     S.experience.concat(S.volunteering).forEach(function (r) {
-      feed.push({ y: yearOf(r.date), when: r.date,
-        cat: r.kind === 'edu' ? 'EDUCATION' : (r.kind === 'vol' ? 'COMMUNITY' : 'ROLE'),
-        tone: r.kind === 'edu' ? 'green' : (r.kind === 'vol' ? 'orange' : 'cyan'),
-        t: r.role, s: r.org, extra: r.desc });
+      feedItems.push({ y: yearOf(r.date), when: r.date,
+        cat: r.kind === 'edu' ? 'education' : (r.kind === 'vol' ? 'community' : 'role'),
+        tone: r.kind, t: r.role, s: r.org });
     });
-    feed.sort(function (a, b) { return b.y - a.y; });
+    feedItems.sort(function (a, b) { return b.y - a.y; });
 
-    var t = term({
-      title: 'const <b>updates</b> = new <em>Feed</em>(<i>\'all\'</i>)',
-      meta: '<span>' + feed.length + ' entries</span><span>newest first</span>',
-      path: '~/updates',
-      hint: 'sort -r | head -' + feed.length,
-      foot: '<span><b>' + S.publications.length + '</b> publications</span>' +
-            '<span><b>' + P.stats.citations + '</b> citations</span>' +
-            '<span class="right"><span>h-index <b>' + P.stats.hindex + '</b></span>' +
-            '<span>based in <b>' + esc(P.location) + '</b></span></span>'
-    });
-
-    var tb = table([{ label: 'TIME' }, { label: 'CAT' }, { label: 'PID' },
-                    { label: 'ENTRY' }, { label: 'LINK' }, { label: '', num: true }]);
-    feed.forEach(function (f, i) {
-      var tr = el('tr', 'row');
-      tr.innerHTML =
-        '<td class="when">' + esc(f.when) + '</td>' +
-        '<td><span class="chip ' + f.tone + '">' + f.cat + '</span></td>' +
-        '<td class="pid">' + pid(i) + '</td>' +
-        '<td><div class="t">' + esc(f.t) + '</div><div class="s">' + esc(f.s) + '</div></td>' +
-        '<td>' + (f.url ? '<a class="chip grey chip-link" href="' + esc(f.url) +
-          '" target="_blank" rel="noopener">open ↗</a>' : '<span class="pid">—</span>') + '</td>';
-      expandable(tr, 6, function (box) {
-        var p = el('p', null, f.extra || '—');
-        box.appendChild(p);
-      });
-      tb.body.appendChild(tr);
-    });
-    t.bodyEl.appendChild(tb);
-    root.appendChild(t);
+    var act = el('section', null); act.id = 'activity';
+    head(act, 'activity', 'Recent <em>updates</em>',
+      feedItems.length + ' entries across publications, talks, roles and community work.');
+    var feed = el('div', 'feed fade-in');
+    feed.innerHTML = feedItems.map(function (f) {
+      return '<div class="feed-row">' +
+        '<div class="feed-when">' + esc(f.when) + '</div>' +
+        '<div><span class="timeline-badge ' + f.tone + ' feed-cat">' + f.cat + '</span></div>' +
+        '<div><div class="feed-t">' + (f.url
+            ? '<a href="' + esc(f.url) + '"' + ext(f.url) + '>' + esc(f.t) + ' ↗</a>'
+            : esc(f.t)) + '</div>' +
+          '<div class="feed-s">' + esc(f.s) + '</div></div></div>';
+    }).join('');
+    act.appendChild(feed);
+    root.appendChild(act);
   };
 
   routes.research = function (root) {
-    section(root, 'Published <em>work</em>',
-      'Peer-reviewed publications. Filter with the grep box, or open a row for tags and the DOI.');
+    var sec = el('section', null); sec.id = 'research';
+    head(sec, 'research', 'Published <em>work</em>',
+      'Search the titles, journals and tags, or open a paper for its keywords and DOI.');
 
     var pubs = S.publications.slice();
     var maxCit = Math.max.apply(null, pubs.map(function (p) { return p.cited; }));
     var years = pubs.map(function (p) { return p.year; })
       .filter(function (v, i, a) { return a.indexOf(v) === i; }).sort().reverse();
 
-    var t = term({
-      title: 'const <b>papers</b> = new <em>Explorer</em>(<i>\'publications\'</i>)',
-      meta: '<span>' + pubs.length + ' papers</span><span>' + P.stats.citations +
-            ' citations</span><span>h-index ' + P.stats.hindex + '</span>',
-      path: '~/research',
-      hint: 'type a term above to filter',
-      foot: '<span id="pub-count">Showing <b>' + pubs.length + '</b> of <b>' + pubs.length + '</b></span>' +
-            '<span class="right"><span>Latest <b>2024</b></span><span>Top cited <b>' + maxCit + '</b></span></span>'
-    });
-
-    var filters = el('div', 'filters');
-    filters.innerHTML =
-      '<label class="grep"><span>grep -i</span>' +
-      '<input id="pub-grep" type="search" placeholder="\'quantile\' publications/*" ' +
-      'aria-label="Filter publications" /></label>' +
-      '<select id="pub-year" aria-label="Filter by year"><option value="">All years</option>' +
+    var bar = el('div', 'pub-filters');
+    bar.innerHTML =
+      '<label class="pub-search"><span>//&nbsp;search</span>' +
+      '<input id="pub-q" type="search" placeholder="quantile, Albania, machine learning…" ' +
+      'aria-label="Search publications" /></label>' +
+      '<select id="pub-year" aria-label="Filter by year"><option value="">all years</option>' +
       years.map(function (y) { return '<option>' + y + '</option>'; }).join('') + '</select>' +
-      '<select id="pub-sort" aria-label="Sort"><option value="cited">Sort: citations</option>' +
-      '<option value="year">Sort: year</option></select>';
-    t.bodyEl.appendChild(filters);
+      '<select id="pub-sort" aria-label="Sort publications">' +
+      '<option value="year">newest first</option><option value="cited">most cited</option></select>';
+    sec.appendChild(bar);
 
-    var tb = table([{ label: 'PAPER' }, { label: 'VENUE' }, { label: 'YEAR', num: true },
-                    { label: 'CITED', num: true }, { label: '', num: true }]);
-    t.bodyEl.appendChild(tb);
+    var line = el('div', 'result-line');
+    line.id = 'pub-result';
+    sec.appendChild(line);
+
+    var tl = el('div', 'pub-timeline');
+    sec.appendChild(tl);
+    root.appendChild(sec);
+
+    function card(p) {
+      var c = el('div', 'pub-card');
+      var body = el('div', 'pub-card-body');
+      body.innerHTML =
+        '<div class="pub-card-header"><div class="pub-title">' + esc(p.title) + '</div>' +
+        '<span class="pub-year-badge">' + p.year + '</span></div>' +
+        '<div class="pub-meta"><span class="pub-journal">' + esc(p.journal) + '</span>' +
+        p.tags.map(function (t) { return '<span class="pub-tag">' + esc(t) + '</span>'; }).join('') + '</div>';
+      c.appendChild(body);
+      var cit = el('div', 'pub-cit');
+      cit.innerHTML = '<span class="pub-cit-label">cited by</span>' +
+        '<div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="' +
+        Math.round((p.cited / maxCit) * 100) + '"></div></div>' +
+        '<span class="pub-cit-count">' + p.cited + '</span>';
+      c.appendChild(cit);
+      addExpand(c, 'details', function (box) {
+        box.innerHTML = '<h5>KEYWORDS</h5><div class="pub-meta">' +
+          p.tags.map(function (t) { return '<span class="pub-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
+          '<p>Published in <strong>' + esc(p.journal) + '</strong>, ' + p.year +
+          '. Cited ' + p.cited + ' times according to Google Scholar.</p>' +
+          '<a class="detail-link" href="' + esc(p.url) + '" target="_blank" rel="noopener">open paper ↗</a>';
+      });
+      return c;
+    }
 
     function render() {
-      var q = (document.getElementById('pub-grep').value || '').toLowerCase().replace(/['"]/g, '');
+      var q = (document.getElementById('pub-q').value || '').toLowerCase().trim();
       var yr = document.getElementById('pub-year').value;
       var sort = document.getElementById('pub-sort').value;
       var rows = pubs.filter(function (p) {
         var hay = (p.title + ' ' + p.journal + ' ' + p.tags.join(' ')).toLowerCase();
         return (!q || hay.indexOf(q) !== -1) && (!yr || String(p.year) === yr);
       }).sort(function (a, b) {
-        return sort === 'year' ? b.year - a.year || b.cited - a.cited : b.cited - a.cited;
+        return sort === 'cited' ? b.cited - a.cited || b.year - a.year : b.year - a.year || b.cited - a.cited;
       });
 
-      tb.body.textContent = '';
-      rows.forEach(function (p) {
-        var tr = el('tr', 'row');
-        tr.innerHTML =
-          '<td><div class="t">' + esc(p.title) + '</div></td>' +
-          '<td class="s">' + esc(p.journal) + '</td>' +
-          '<td class="num when">' + p.year + '</td>' +
-          '<td class="num">' + p.cited + '</td>';
-        expandable(tr, 5, function (box) {
-          box.appendChild(chips(p.tags, 'cyan'));
-          var bar = el('div', 'hist');
-          bar.innerHTML = '<div class="hist-row"><span class="y">cited</span>' +
-            '<span class="hist-bar"><span class="hist-fill" style="width:' +
-            Math.round((p.cited / maxCit) * 100) + '%"></span></span>' +
-            '<span class="n">' + p.cited + '</span></div>';
-          box.appendChild(bar);
-          var link = el('div', 'chips');
-          link.innerHTML = '<a class="chip blue chip-link" href="' + esc(p.url) +
-            '" target="_blank" rel="noopener">open paper ↗</a>';
-          box.appendChild(link);
-        });
-        tb.body.appendChild(tr);
-      });
-      document.getElementById('pub-count').innerHTML =
-        'Showing <b>' + rows.length + '</b> of <b>' + pubs.length + '</b>';
+      tl.textContent = '';
+      tl.classList.toggle('ranked', sort === 'cited');
+      if (!rows.length) {
+        var none = el('div', 'empty-note', 'No publications match “' + q + '”.');
+        tl.appendChild(none);
+      } else {
+        rows.forEach(function (p, i) { tl.appendChild(entry(PUB, [p.year], card(p), i)); });
+      }
+
+      var shown = rows.reduce(function (n, p) { return n + p.cited; }, 0);
+      line.innerHTML = 'showing <b>' + rows.length + '</b> of <b>' + pubs.length + '</b> papers' +
+        '<span class="right"><b>' + shown + '</b> citations in view</span>';
+      tl.querySelectorAll('.pub-cit-bar').forEach(function (b) { b.style.width = b.dataset.pct + '%'; });
     }
 
-    root.appendChild(t);
-    ['pub-grep', 'pub-year', 'pub-sort'].forEach(function (id) {
+    ['pub-q', 'pub-year', 'pub-sort'].forEach(function (id) {
       document.getElementById(id).addEventListener('input', render);
     });
     render();
 
-    /* citations histogram */
-    var years2 = Object.keys(S.citationsByYear);
-    var max = Math.max.apply(null, years2.map(function (y) { return S.citationsByYear[y]; }));
-    var h = term({
-      title: 'const <b>citations</b> = <em>histogram</em>(<i>\'by year\'</i>)',
-      meta: '<span>' + P.stats.citations + ' total</span><span>source: Google Scholar</span>',
-      path: '~/research/metrics',
-      prompt: false,
-      foot: '<span>h-index <b>' + P.stats.hindex + '</b></span><span>i10-index <b>' +
-            P.stats.i10 + '</b></span><span class="right"><span>peak <b>' + max + '</b> in 2025</span></span>'
+    /* citations by year */
+    var chart = el('div', 'cit-chart-wrap fade-in');
+    var ys = Object.keys(S.citationsByYear);
+    var max = Math.max.apply(null, ys.map(function (y) { return S.citationsByYear[y]; }));
+    chart.innerHTML = '<div class="cit-chart-header">' +
+      '<span class="cit-chart-title">// citations by year</span>' +
+      '<span class="cit-chart-total">' + P.stats.citations + ' total · Google Scholar</span></div>' +
+      '<div class="cit-bars">' + ys.map(function (y) {
+        var n = S.citationsByYear[y];
+        return '<div class="cit-bar-col"><div class="cit-bar-fill" style="height:0" data-h="' +
+          Math.round((n / max) * 100) + '%" title="' + n + ' citations in ' + y + '"></div>' +
+          '<div class="cit-bar-year">' + y + '</div></div>';
+      }).join('') + '</div>';
+    sec.appendChild(chart);
+    onView(chart, function () {
+      chart.querySelectorAll('.cit-bar-fill').forEach(function (b) {
+        b.style.transition = reduce ? 'none' : 'height 1s ease 0.3s';
+        b.style.height = b.dataset.h;
+      });
     });
-    var pad = el('div', 'term-pad');
-    var hist = el('div', 'hist');
-    hist.innerHTML = years2.map(function (y) {
-      var n = S.citationsByYear[y];
-      return '<div class="hist-row"><span class="y">' + y + '</span>' +
-        '<span class="hist-bar"><span class="hist-fill" data-w="' +
-        Math.round((n / max) * 100) + '%"></span></span><span class="n">' + n + '</span></div>';
-    }).join('');
-    pad.appendChild(hist);
-    h.bodyEl.appendChild(pad);
-    root.appendChild(h);
 
-    var fills = hist.querySelectorAll('.hist-fill');
-    function grow() { [].forEach.call(fills, function (f) { f.style.width = f.dataset.w; }); }
-    if (reduce || !('IntersectionObserver' in window)) { grow(); }
-    else {
-      var io = new IntersectionObserver(function (es) {
-        es.forEach(function (e) { if (e.isIntersecting) { grow(); io.disconnect(); } });
-      }, { threshold: 0.3 });
-      io.observe(hist);
-    }
+    var tags = el('div', 'research-interests fade-in');
+    tags.innerHTML = S.interests.map(function (t) {
+      return '<span class="interest-tag">' + esc(t) + '</span>';
+    }).join('');
+    sec.appendChild(tags);
   };
 
   routes.conferences = function (root) {
-    section(root, 'Conference <em>presentations</em>', 'Posters and talks at international meetings.');
-    var t = term({
-      title: 'const <b>talks</b> = new <em>Explorer</em>(<i>\'conferences\'</i>)',
-      meta: '<span>' + S.conferences.length + ' presentations</span>',
-      path: '~/conferences',
-      hint: 'ls -la ./talks',
-      foot: '<span><b>' + S.conferences.length + '</b> total</span><span class="right"><span>latest <b>2026</b></span></span>'
+    var sec = el('section', null); sec.id = 'conferences';
+    head(sec, 'conferences', 'Conference <em>presentations</em>',
+      'Posters and talks at international meetings.');
+    var tl = el('div', 'timeline fade-in');
+    S.conferences.forEach(function (c, i) {
+      var card = el('div', 'timeline-card conf-photo-card');
+      card.innerHTML =
+        (c.poster ? '<div class="conf-card-photo"><img src="' + esc(c.poster) +
+          '" alt="' + esc(c.title) + ' poster" /></div>' : '') +
+        '<div class="conf-card-body"><div class="timeline-card-header"><div>' +
+        '<div class="timeline-date">' + esc(c.date) + '</div>' +
+        '<div class="timeline-role">' + esc(c.title) + '</div>' +
+        '<div class="timeline-org">' + esc(c.venue) + '</div></div>' +
+        '<div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;margin-top:4px">' +
+        c.badges.map(function (b) { return '<span class="timeline-badge conf">' + esc(b) + '</span>'; }).join('') +
+        '</div></div></div>';
+      if (c.url) {
+        addExpand(card, 'abstract', function (box) {
+          box.innerHTML = '<p>' + esc(c.venue) + '</p>' +
+            '<a class="detail-link" href="' + esc(c.url) + '" target="_blank" rel="noopener">read abstract ↗</a>';
+        });
+      }
+      tl.appendChild(entry(TL, [String(yearOf(c.date))], card, i));
     });
-    var tb = table([{ label: 'POSTER' }, { label: 'WHEN' }, { label: 'PRESENTATION' },
-                    { label: 'ROLE' }, { label: '', num: true }]);
-    S.conferences.forEach(function (c) {
-      var tr = el('tr', 'row');
-      tr.innerHTML =
-        '<td>' + (c.poster ? '<img class="poster" src="' + esc(c.poster) + '" alt="Poster" />'
-                           : '<span class="pid">—</span>') + '</td>' +
-        '<td class="when">' + esc(c.date) + '</td>' +
-        '<td><div class="t">' + esc(c.title) + '</div><div class="s">' + esc(c.venue) + '</div></td>' +
-        '<td>' + c.badges.map(function (b) {
-          return '<span class="chip purple">' + esc(b) + '</span>';
-        }).join(' ') + '</td>';
-      expandable(tr, 5, function (box) {
-        var p = el('p', null, c.venue);
-        box.appendChild(p);
-        if (c.url) {
-          var link = el('div', 'chips');
-          link.innerHTML = '<a class="chip blue chip-link" href="' + esc(c.url) +
-            '" target="_blank" rel="noopener">abstract ↗</a>';
-          box.appendChild(link);
-        }
-      });
-      tb.body.appendChild(tr);
-    });
-    t.bodyEl.appendChild(tb);
-    root.appendChild(t);
+    sec.appendChild(tl);
+    root.appendChild(sec);
   };
 
-  function rowsPage(root, key, title, sub, termTitle, path) {
-    section(root, title, sub);
-    var rows = S[key];
-    var TONE = { edu: 'green', work: 'cyan', vol: 'orange', conf: 'purple' };
-    var t = term({
-      title: termTitle,
-      meta: '<span>' + rows.length + ' entries</span>',
-      path: path,
-      hint: 'cat ./' + key + '.log',
-      foot: '<span><b>' + rows.length + '</b> entries</span>'
+  function logPage(root, key, tag, title, intro) {
+    var sec = el('section', null); sec.id = key;
+    head(sec, tag, title, intro);
+    var tl = el('div', 'timeline fade-in');
+    S[key].forEach(function (r, i) {
+      var card = el('div', 'timeline-card');
+      card.innerHTML =
+        '<div class="timeline-card-header"><div>' +
+        '<div class="timeline-date">' + esc(r.date) + '</div>' +
+        '<div class="timeline-role">' + esc(r.role) + '</div>' +
+        '<div class="timeline-org">' + esc(r.org) + '</div></div>' +
+        '<span class="timeline-badge ' + esc(r.kind) + '">' + esc(r.badge) + '</span></div>' +
+        (r.desc ? '<div class="timeline-desc">' + esc(r.desc) + '</div>' : '');
+      var span = String(r.date).match(/(\d{4})/g) || [''];
+      tl.appendChild(entry(TL, span.length > 1 ? [span[span.length - 1], span[0]] : [span[0]], card, i));
     });
-    var tb = table([{ label: 'WHEN' }, { label: 'WHAT' }, { label: 'KIND' }, { label: '', num: true }]);
-    rows.forEach(function (r) {
-      var tr = el('tr', 'row');
-      tr.innerHTML =
-        '<td class="when">' + esc(r.date) + '</td>' +
-        '<td><div class="t">' + esc(r.role) + '</div><div class="s">' + esc(r.org) + '</div></td>' +
-        '<td><span class="chip ' + (TONE[r.kind] || 'grey') + '">' + esc(r.badge) + '</span></td>';
-      expandable(tr, 4, function (box) {
-        box.appendChild(el('p', null, r.desc || '—'));
-      });
-      tb.body.appendChild(tr);
-    });
-    t.bodyEl.appendChild(tb);
-    root.appendChild(t);
+    sec.appendChild(tl);
+    root.appendChild(sec);
   }
 
   routes.experience = function (root) {
-    rowsPage(root, 'experience', 'Background &amp; <em>education</em>',
-      'Where I have studied and worked.',
-      'const <b>history</b> = new <em>Log</em>(<i>\'experience\'</i>)', '~/experience');
+    logPage(root, 'experience', 'experience', 'Background &amp; <em>education</em>',
+      'Where I have studied and worked.');
   };
-
   routes.volunteering = function (root) {
-    rowsPage(root, 'volunteering', 'Community &amp; <em>service</em>',
-      'Volunteering and organising alongside the research.',
-      'const <b>service</b> = new <em>Log</em>(<i>\'community\'</i>)', '~/community');
+    logPage(root, 'volunteering', 'volunteering', 'Community &amp; <em>service</em>',
+      'Volunteering and organising alongside the research.');
   };
 
   routes.about = function (root) {
-    section(root, 'Bridging statistics and <em>public health</em>');
-    var t = term({
-      title: 'cat <b>about.md</b>',
-      meta: '<span>' + S.about.length + ' paragraphs</span>',
-      path: '~/about',
-      hint: 'wc -w about.md',
-      prompt: true
-    });
-    var pad = el('div', 'term-pad prose');
-    S.about.forEach(function (p) { pad.appendChild(el('p', null, p)); });
-    t.bodyEl.appendChild(pad);
-    root.appendChild(t);
-
-    var sk = term({
-      title: 'ls <b>~/skills</b>',
-      meta: '<span>' + S.skills.reduce(function (n, g) { return n + g.items.length; }, 0) + ' entries</span>',
-      path: '~/skills',
-      prompt: false
-    });
-    var pad2 = el('div', 'term-pad');
-    var grid = el('div', 'skills');
-    grid.innerHTML = S.skills.map(function (g) {
-      return '<div class="skill-group"><h4>' + esc(g.group.toUpperCase()) + '</h4><ul>' +
-        g.items.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul></div>';
+    var sec = el('section', null); sec.id = 'about';
+    head(sec, 'about', 'Bridging statistics<br>and <em>public health</em>');
+    var grid = el('div', 'about-grid');
+    var leftCol = el('div', 'fade-in');
+    S.about.forEach(function (p) { leftCol.appendChild(el('p', null, p)); });
+    var rightCol = el('div', 'fade-in');
+    var sk = el('div', 'skills-grid');
+    sk.innerHTML = S.skills.map(function (g) {
+      return g.items.map(function (i) {
+        return '<div class="skill-item"><div class="skill-item-label">' + esc(g.group) +
+          '</div><div class="skill-item-val">' + esc(i) + '</div></div>';
+      }).join('');
     }).join('');
-    pad2.appendChild(grid);
-    sk.bodyEl.appendChild(pad2);
-    root.appendChild(sk);
+    rightCol.appendChild(sk);
+    grid.appendChild(leftCol); grid.appendChild(rightCol);
+    sec.appendChild(grid);
+    root.appendChild(sec);
   };
 
   routes.contact = function (root) {
-    section(root, 'Open to <em>collaboration</em>',
-      'Interested in work involving statistical methodology, public health or biomedical data science. Best reached by email.');
-    var t = term({
-      title: 'const <b>contact</b> = new <em>Map</em>(<i>\'links\'</i>)',
-      meta: '<span>' + S.links.length + ' entries</span>',
-      path: '~/contact',
-      hint: 'mail -s "hello" ' + P.user,
-      foot: '<span class="right"><span>based in <b>' + esc(P.location) + '</b></span></span>'
-    });
-    var tb = table([{ label: 'WHERE' }, { label: 'HANDLE' }, { label: '', num: true }]);
-    S.links.forEach(function (l) {
-      var tr = el('tr', 'row');
-      var external = l.url.indexOf('http') === 0;
-      tr.innerHTML = '<td class="t">' + esc(l.label) + '</td>' +
-        '<td class="s">' + esc(l.hint) + '</td>' +
-        '<td class="num"><a class="chip blue chip-link" href="' + esc(l.url) + '"' +
-        (external ? ' target="_blank" rel="noopener"' : '') + '>open ↗</a></td>';
-      tb.body.appendChild(tr);
-    });
-    t.bodyEl.appendChild(tb);
-    root.appendChild(t);
+    var sec = el('section', null); sec.id = 'contact';
+    var grid = el('div', 'contact-grid');
+    var leftCol = el('div', 'fade-in');
+    leftCol.innerHTML = '<div class="section-tag">contact</div>' +
+      '<h2>Open to <em>collaboration</em></h2>' +
+      '<p>I\'m always interested in collaborative research involving statistical methodologies, ' +
+      'public health, or biomedical data science. Feel free to reach out via email or find me ' +
+      'on any of the platforms below.</p>' +
+      '<p style="font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:1.5rem">// best reached by email</p>';
+    var rightCol = el('div', 'fade-in');
+    var list = el('div', 'contact-links');
+    list.innerHTML = S.links.map(function (l) {
+      return '<a href="' + esc(l.url) + '" class="contact-link"' + ext(l.url) + '>' +
+        '<span class="contact-link-label"><span class="contact-link-dot"></span>' + esc(l.label) + '</span>' +
+        '<span class="contact-link-arrow">→</span></a>';
+    }).join('');
+    rightCol.appendChild(list);
+    grid.appendChild(leftCol); grid.appendChild(rightCol);
+    sec.appendChild(grid);
+    root.appendChild(sec);
   };
-
-  /* pages whose content lives in the HTML just get the chrome + clock */
-  routes.static = function () {};
 
   var root = document.getElementById('app');
   var name = document.body.dataset.page;
   if (root && routes[name]) routes[name](root);
+  reveal();
 
-  tickClocks();
-  setInterval(tickClocks, 1000);
+  /* ── hero plot ─────────────────────────────────────────────────────── */
+  var cv = document.getElementById('q-canvas');
+  if (cv && cv.getContext) {
+    var ctx = cv.getContext('2d');
+    var A = '240,169,59', T = '94,200,192';
+    var PAD = { l: 16, r: 16, t: 34, b: 30 };
+    function mul(a) {
+      return function () {
+        a |= 0; a = a + 0x6D2B79F5 | 0;
+        var t = Math.imul(a ^ a >>> 15, 1 | a);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+    var rnd = mul(20260917), pts = [];
+    for (var i = 0; i < 170; i++) {
+      var x = rnd(), g = (rnd() + rnd() + rnd() - 1.5) / 1.5, sd = 0.06 + 0.26 * x;
+      pts.push({ x: x, y: Math.max(0.05, Math.min(0.95, 0.24 + 0.40 * x + g * sd)),
+                 ph: rnd() * 6.283, sp: 0.5 + rnd() });
+    }
+    var TAUS = [{ a: 0.14, b: 0.16, w: 1, o: 0.45 }, { a: 0.24, b: 0.40, w: 2, o: 1 },
+                { a: 0.34, b: 0.60, w: 1, o: 0.45 }];
+    var W = 0, H = 0;
+    function fit() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2), b = cv.getBoundingClientRect();
+      if (!b.width || !b.height) return false;
+      W = b.width; H = b.height;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return true;
+    }
+    function X(v) { return PAD.l + v * (W - PAD.l - PAD.r); }
+    function Y(v) { return H - PAD.b - v * (H - PAD.t - PAD.b); }
+    function draw(t) {
+      if (!W || !H) return;
+      ctx.clearRect(0, 0, W, H);
+      ctx.beginPath();
+      ctx.moveTo(X(0), Y(TAUS[2].a)); ctx.lineTo(X(1), Y(TAUS[2].a + TAUS[2].b));
+      ctx.lineTo(X(1), Y(TAUS[0].a + TAUS[0].b)); ctx.lineTo(X(0), Y(TAUS[0].a));
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(' + A + ',0.10)'; ctx.fill();
+      for (var j = 0; j < pts.length; j++) {
+        var p = pts[j], dy = reduce ? 0 : Math.sin(t * 0.0007 * p.sp + p.ph) * (H * 0.012);
+        ctx.beginPath(); ctx.arc(X(p.x), Y(p.y) + dy, 1.9, 0, 6.283);
+        ctx.fillStyle = 'rgba(' + T + ',0.38)'; ctx.fill();
+      }
+      for (var k = 0; k < TAUS.length; k++) {
+        var q = TAUS[k];
+        ctx.beginPath(); ctx.moveTo(X(0), Y(q.a)); ctx.lineTo(X(1), Y(q.a + q.b));
+        ctx.strokeStyle = 'rgba(' + A + ',' + q.o + ')'; ctx.lineWidth = q.w; ctx.stroke();
+      }
+    }
+    var raf = null, live = false;
+    function loop(ts) { draw(ts); raf = requestAnimationFrame(loop); }
+    if (fit()) draw(0);
+    window.addEventListener('resize', function () { if (fit()) draw(performance.now()); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (e.isIntersecting && !live && !reduce) { live = true; raf = requestAnimationFrame(loop); }
+          else if (!e.isIntersecting && live) { cancelAnimationFrame(raf); live = false; }
+        });
+      }, { threshold: 0.05 }).observe(cv);
+    } else if (!reduce) { raf = requestAnimationFrame(loop); }
+  }
 
-  /* drawings carousel (interests page) */
+  /* ── hero stat counters ────────────────────────────────────────────── */
+  if (!reduce && 'IntersectionObserver' in window) {
+    var cio = new IntersectionObserver(function (rows) {
+      rows.forEach(function (r) {
+        if (!r.isIntersecting) return;
+        cio.unobserve(r.target);
+        var node = r.target.firstChild, end = parseInt(node.nodeValue, 10), t0 = null;
+        function step(ts) {
+          if (t0 === null) t0 = ts;
+          var k = Math.min((ts - t0) / 1000, 1);
+          node.nodeValue = String(Math.round(end * (1 - Math.pow(1 - k, 3))));
+          if (k < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.6 });
+    [].forEach.call(document.querySelectorAll('.hero-stat-n'), function (e) {
+      var n = e.firstChild;
+      if (n && n.nodeType === 3 && !isNaN(parseInt(n.nodeValue, 10))) cio.observe(e);
+    });
+  }
+
+  /* ── drawings carousel ─────────────────────────────────────────────── */
   (function () {
-    var inner = document.getElementById('dc-inner');
-    var dots = document.getElementById('dc-dots');
-    var counter = document.getElementById('dc-counter');
-    var track = document.getElementById('dc-track');
+    var inner = document.getElementById('dc-inner'), dots = document.getElementById('dc-dots');
+    var counter = document.getElementById('dc-counter'), track = document.getElementById('dc-track');
     if (!inner || !dots || !counter || !track) return;
     var slides = inner.querySelectorAll('.dc-slide'), total = slides.length, cur = 0;
     [].forEach.call(slides, function (_, i) {
-      var d = el('button');
-      d.type = 'button';
+      var d = el('button'); d.type = 'button';
       d.setAttribute('aria-label', 'Drawing ' + (i + 1));
       d.style.cssText = 'width:7px;height:7px;border-radius:50%;border:0;padding:0;cursor:pointer;transition:background .2s,transform .2s;';
       d.addEventListener('click', function () { go(i); });
@@ -521,7 +536,7 @@
     function paint() {
       inner.style.transform = 'translateX(-' + (cur * 100) + '%)';
       [].forEach.call(dots.children, function (d, i) {
-        d.style.background = i === cur ? 'var(--blue)' : 'var(--line2)';
+        d.style.background = i === cur ? 'var(--purple)' : 'var(--border2)';
         d.style.transform = i === cur ? 'scale(1.3)' : 'scale(1)';
       });
       counter.textContent = (cur + 1) + ' / ' + total;

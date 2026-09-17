@@ -8,14 +8,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="icon" type="image/png" href="assets/favicon.png" />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/site.css" />
 </head>
 <body data-page="static">
 
   <nav>
-    <a class="nav-logo" href="index.html"><b>~</b>/zahidul<span>.khan</span></a>
-    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">≡</button>
+    <a class="nav-logo" href="index.html">Zahidul<span>.</span>Khan</a>
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">☰</button>
     <ul class="nav-links" id="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
@@ -29,75 +29,59 @@
     </ul>
   </nav>
 
-  <main class="page" id="app">
-    <div class="phead">
-      <h1><span class="sig">$</span>Beyond <em>research</em></h1>
-      <p>What happens when the analysis stops.</p>
-    </div>
+  <div class="page" id="app">
+    <section id="interests">
+      <div class="section-tag">interests</div>
+      <h2>Beyond <em>research</em></h2>
 
-    <div class="term">
-      <div class="term-strip"></div>
-      <div class="term-bar">
-        <span class="dots"><i></i><i></i><i></i></span>
-        <span class="term-title">cat <b>valorant.log</b></span>
-        <span class="term-clock" data-clock></span>
-      </div>
-      <div class="term-meta"><span><b>zahidul</b></span><span>peak rank achieved</span><span class="path">~/interests</span></div>
-      <div class="term-body">
-        <div class="term-pad prose">
-          <p>
-            I used to play Valorant seriously with my friends — we'd grind ranked together,
-            communicate strats, and genuinely try to climb. At my peak I hit
-            <strong>Platinum 3</strong>. Then life happened: studies, work, research, moving
-            countries, and the squad drifted apart. I still load in solo sometimes, just to
-            unwind. It's not the same, but the muscle memory's still there (feels like!).
-          </p>
-          <div class="chips" style="margin-top:14px">
-            <span class="chip purple">Platinum III</span>
-            <span class="chip grey">competitive</span>
-            <span class="chip grey">solo</span>
-            <span class="chip grey">squad</span>
+      <div class="fade-in" style="margin-top:2rem">
+        <div style="font-family:var(--mono);font-size:12px;color:var(--purple);letter-spacing:0.12em;margin-bottom:1.25rem;">// valorant</div>
+        <p>
+          I used to play Valorant seriously with my friends — we'd grind ranked together,
+          communicate strats, and genuinely try to climb. At my peak I hit
+          <strong style="color:var(--text);font-weight:400">Platinum 3</strong>. Then life happened:
+          studies, work, research, moving countries, and the squad drifted apart. I still load in
+          solo sometimes, just to unwind. It's not the same, but the muscle memory's still there
+          (feels like!).
+        </p>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:1.5rem;flex-wrap:wrap">
+          <img src="assets/platinum3.png" alt="Platinum III rank" style="width:52px;height:52px;object-fit:contain" />
+          <div>
+            <div style="font-size:19px;font-family:var(--serif);color:var(--text);font-style:italic">Platinum III</div>
+            <div style="font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:0.06em">peak rank · competitive · solo &amp; squad</div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="term">
-      <div class="term-strip"></div>
-      <div class="term-bar">
-        <span class="dots"><i></i><i></i><i></i></span>
-        <span class="term-title">const <b>drawings</b> = new <em>Gallery</em>(<i>'portraits'</i>)</span>
-        <span class="term-clock" data-clock></span>
-      </div>
-      <div class="term-meta"><span><b>zahidul</b></span><span>6 images</span><span class="path">~/interests/drawings</span></div>
-      <div class="term-body">
-        <div class="term-pad">
-          <p style="font-size:14.5px;color:var(--dim);line-height:1.85;max-width:74ch;margin-bottom:16px">
-            Drawing has always been a quiet hobby — portraits, caricatures, and random doodles
-            that come out of nowhere. There's something satisfying about reducing a face down to
-            its essential lines, or exaggerating one feature until it becomes a character. It's
-            the same kind of careful observation as data analysis, just with a pencil.
-          </p>
+      <div class="fade-in" style="margin-top:3.5rem">
+        <div style="font-family:var(--mono);font-size:12px;color:var(--purple);letter-spacing:0.12em;margin-bottom:1.25rem;">// portraits &amp; doodles</div>
+        <p>
+          Drawing has always been a quiet hobby — portraits, caricatures, and random doodles that
+          come out of nowhere. There's something satisfying about reducing a face down to its
+          essential lines, or exaggerating one feature until it becomes a character. It's the same
+          kind of careful observation as data analysis, just with a pencil.
+        </p>
+        <div style="max-width:520px;margin-top:1.75rem">
           <div class="dc-track" id="dc-track">
             <div class="dc-inner" id="dc-inner">
-            <div class="dc-slide"><img src="assets/draw-1.jpg" alt="Drawing 1" loading="lazy" /></div>
-            <div class="dc-slide"><img src="assets/draw-2.jpg" alt="Drawing 2" loading="lazy" /></div>
-            <div class="dc-slide"><img src="assets/draw-3.jpg" alt="Drawing 3" loading="lazy" /></div>
-            <div class="dc-slide"><img src="assets/draw-4.jpg" alt="Drawing 4" loading="lazy" /></div>
-            <div class="dc-slide"><img src="assets/draw-5.jpg" alt="Drawing 5" loading="lazy" /></div>
-            <div class="dc-slide"><img src="assets/draw-6.jpg" alt="Drawing 6" loading="lazy" /></div>
+              <div class="dc-slide"><img src="assets/draw-1.jpg" alt="Drawing 1" loading="lazy" /></div>
+              <div class="dc-slide"><img src="assets/draw-2.jpg" alt="Drawing 2" loading="lazy" /></div>
+              <div class="dc-slide"><img src="assets/draw-3.jpg" alt="Drawing 3" loading="lazy" /></div>
+              <div class="dc-slide"><img src="assets/draw-4.jpg" alt="Drawing 4" loading="lazy" /></div>
+              <div class="dc-slide"><img src="assets/draw-5.jpg" alt="Drawing 5" loading="lazy" /></div>
+              <div class="dc-slide"><img src="assets/draw-6.jpg" alt="Drawing 6" loading="lazy" /></div>
             </div>
           </div>
           <div class="dc-controls">
-            <button type="button" onclick="dcMove(-1)" aria-label="Previous drawing">‹ prev</button>
+            <button type="button" onclick="dcMove(-1)" aria-label="Previous drawing">‹</button>
             <div id="dc-dots"></div>
-            <button type="button" onclick="dcMove(1)" aria-label="Next drawing">next ›</button>
+            <button type="button" onclick="dcMove(1)" aria-label="Next drawing">›</button>
             <span id="dc-counter"></span>
           </div>
         </div>
       </div>
-    </div>
-  </main>
+    </section>
+  </div>
 
   <div class="lightbox" id="lightbox" onclick="closeLightbox()">
     <span class="lightbox-close">✕</span>
@@ -105,8 +89,8 @@
   </div>
 
   <footer>
-    <span><b>$</b> Zahidul Islam Khan — built with plain HTML, CSS and a little JavaScript</span>
-    <span>Oulu, Finland</span>
+    <div class="footer-left">zahidul<span>.</span>khan — <span>2026</span></div>
+    <div class="footer-right">built with html · css · js</div>
   </footer>
 
   <script src="assets/data.js"></script>
