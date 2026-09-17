@@ -54,8 +54,11 @@ nav {
 
 .nav-links {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 28px;
   list-style: none;
+  min-width: 0;
 }
 
 .nav-links a {
@@ -944,7 +947,7 @@ footer {
 /* ── TRAVEL ── */
 .travel-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
   gap: 18px;
   margin-top: 2rem;
 }
@@ -968,6 +971,10 @@ footer {
   background: var(--bg3);
   overflow: hidden;
 }
+
+/* reels and shorts are shot vertically — give them a frame that fits */
+.tv-card.is-portrait .tv-media { aspect-ratio: 9 / 16; }
+.tv-card.is-embed .tv-media { background: #FFFFFF; }
 
 .tv-media img, .tv-media iframe { width: 100%; height: 100%; display: block; border: 0; }
 .tv-media img { object-fit: cover; }
@@ -1113,6 +1120,13 @@ footer {
   padding: 26px;
   text-align: center;
 }
+
+/* the conference card lays out as a row, so its expander needs its own line */
+.conf-photo-card { flex-wrap: wrap; }
+.conf-photo-card > .card-more,
+.conf-photo-card > .card-detail { flex: 0 0 100%; width: 100%; }
+
+@media (max-width: 560px) { .conf-card-photo { width: 92px; } }
 
 /* ── EXPANDABLE CARD DETAIL ──────────────────────────────────────────── */
 .card-more {
@@ -1265,7 +1279,12 @@ a.feed-row:hover .feed-go { color: var(--purple); transform: translateX(3px); }
 
 @media (max-width: 1080px) {
   nav { height: auto; padding-block: 10px; flex-wrap: wrap; gap: 6px 14px; }
-  .nav-links { gap: 14px; row-gap: 4px; }
+  .nav-links { gap: 16px; row-gap: 6px; justify-content: flex-start; }
   .nav-links a { font-size: 12.5px; }
+}
+
+@media (max-width: 560px) {
+  .nav-links { gap: 12px; row-gap: 8px; }
+  .nav-links a { font-size: 12px; }
 }
 

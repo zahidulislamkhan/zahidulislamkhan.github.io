@@ -1,22 +1,25 @@
 /* ─────────────────────────────────────────────────────────────────────────
-   TRAVEL CONTENT — the only file to edit for this page.
+   TRAVEL CONTENT — paste a link, that is the whole job.
 
-     { kind: 'youtube',   id:  'ljg-6V2Md0E' }
-     { kind: 'instagram', url: 'https://www.instagram.com/<user>/reel/<code>/' }
-     { kind: 'facebook',  url: 'https://www.facebook.com/<page>/videos/<id>/' }
-     { kind: 'photo',     src: 'assets/travel/<file>.jpg' }
+     { url: 'https://youtube.com/shorts/XXXX' }
+     { url: 'https://www.instagram.com/<user>/reel/XXXX/' }
+     { url: 'https://www.facebook.com/<page>/videos/XXXX/' }
+     { src: 'assets/travel/<file>.jpg' }                 ← a photo
 
-   Optional on any entry: title, place, date, poster.
-   YouTube pulls its own thumbnail from the id. Instagram and Facebook do not
-   expose one without an API key, so give those a `poster` once you have an
-   image — until then they show a neutral placeholder and still play on click.
+   Optional on any entry: title, place, date, poster, ratio ('9/16' | '16/9').
+
+   The platform, the video id and portrait-vs-landscape are all worked out
+   from the URL. YouTube serves its own thumbnail. Instagram does not hand
+   one out without an API key, so those cards load Instagram's own embed to
+   get a real cover — give an entry a `poster` and it uses that instead,
+   which is faster and keeps the card in this site's styling.
    ──────────────────────────────────────────────────────────────────────── */
 
 var TRAVEL = [
-  { kind: 'instagram', url: 'https://www.instagram.com/zahidul._.islam._.khan/reel/Da42LPyK5eU/' },
-  { kind: 'youtube',   id: 'ljg-6V2Md0E' },
-  { kind: 'instagram', url: 'https://www.instagram.com/zahidul._.islam._.khan/reel/DcoNOvYq8Rv/' },
-  { kind: 'youtube',   id: 'IzsB5SJQOEE' }
+  { url: 'https://www.instagram.com/zahidul._.islam._.khan/reel/Da42LPyK5eU/' },
+  { url: 'https://youtube.com/shorts/ljg-6V2Md0E' },
+  { url: 'https://www.instagram.com/zahidul._.islam._.khan/reel/DcoNOvYq8Rv/' },
+  { url: 'https://youtube.com/shorts/IzsB5SJQOEE' }
 ];
 
 /* ── renderer ─────────────────────────────────────────────────────────── */
@@ -26,112 +29,164 @@ var TRAVEL = [
   if (!grid) return;
 
   var LABEL = { youtube: 'YouTube', instagram: 'Instagram', facebook: 'Facebook', photo: 'Photo' };
-  var FALLBACK_TITLE = { youtube: 'YouTube short', instagram: 'Instagram reel',
-                         facebook: 'Facebook video', photo: 'Photo' };
+  var FALLBACK = { youtube: 'YouTube video', instagram: 'Instagram reel',
+                   facebook: 'Facebook video', photo: 'Photo' };
 
-  /* a reel URL may be profile-scoped; the embed needs the canonical form */
-  function igCode(url) {
-    var m = String(url).match(/\/(?:reel|reels|p|tv)\/([A-Za-z0-9_-]+)/);
-    return m ? m[1] : null;
+  /* everything below is derived from the link the entry carries */
+  function parse(item) {
+    var u = item.url || '';
+    var o = { kind: 'photo', portrait: false, id: null, code: null };
+    if (!item.url && item.src) return o;
+
+    if (/youtube\.com|youtu\.be/.test(u)) {
+      var m = u.match(/(?:youtu\.be\/|\/shorts\/|[?&]v=|\/embed\/)([A-Za-z0-9_-]{6,})/);
+      o.kind = 'youtube';
+      o.id = item.id || (m && m[1]);
+      o.portrait = /\/shorts\//.test(u);
+    } else if (/instagram\.com/.test(u)) {
+      var c = u.match(/\/(?:reel|reels|p|tv)\/([A-Za-z0-9_-]+)/);
+      o.kind = 'instagram';
+      o.code = c && c[1];
+      o.portrait = /\/reels?\//.test(u);
+    } else if (/facebook\.com/.test(u)) {
+      o.kind = 'facebook';
+    }
+    if (item.ratio) o.portrait = item.ratio === '9/16';
+    return o;
   }
 
-  function placeholder(label) {
+  /* the frame is 9:16 for reels and shorts, so the fallback has to match */
+  function placeholder(label, portrait) {
+    var w = portrait ? 180 : 320, h = portrait ? 320 : 180;
     return 'data:image/svg+xml;charset=utf-8,' +
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">' +
-      '<rect width="320" height="180" fill="%23222B37"/>' +
-      '<text x="160" y="164" text-anchor="middle" fill="%2397A3B2" ' +
-      'font-family="monospace" font-size="12">' + label + '</text></svg>';
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + w + ' ' + h + '">' +
+      '<rect width="' + w + '" height="' + h + '" fill="%23222B37"/>' +
+      '<text x="' + (w / 2) + '" y="' + (h / 2 + 4) + '" text-anchor="middle" fill="%2397A3B2" ' +
+      'font-family="monospace" font-size="11">' + label + '</text></svg>';
   }
 
-  function thumb(item) {
-    if (item.poster) return item.poster;
-    if (item.kind === 'photo') return item.src;
-    if (item.kind === 'youtube') return 'https://i.ytimg.com/vi/' + item.id + '/hqdefault.jpg';
-    return placeholder(LABEL[item.kind] || 'Video');
-  }
-
-  function embed(item) {
-    if (item.kind === 'youtube') {
-      return 'https://www.youtube-nocookie.com/embed/' + item.id + '?autoplay=1&rel=0&playsinline=1';
+  function embedSrc(item, p) {
+    if (p.kind === 'youtube') {
+      return 'https://www.youtube-nocookie.com/embed/' + p.id + '?autoplay=1&rel=0&playsinline=1';
     }
-    if (item.kind === 'instagram') {
-      var code = igCode(item.url);
-      return code ? 'https://www.instagram.com/reel/' + code + '/embed'
-                  : item.url.replace(/\/?$/, '/') + 'embed';
+    if (p.kind === 'instagram') {
+      return 'https://www.instagram.com/reel/' + p.code + '/embed';
     }
-    if (item.kind === 'facebook') {
+    if (p.kind === 'facebook') {
       return 'https://www.facebook.com/plugins/video.php?href=' +
         encodeURIComponent(item.url) + '&show_text=false&autoplay=true';
     }
     return '';
   }
 
-  function outbound(item) {
-    return item.kind === 'youtube' ? 'https://www.youtube.com/watch?v=' + item.id
-                                   : (item.url || item.src);
+  function outbound(item, p) {
+    if (p.kind === 'youtube') {
+      return p.portrait ? 'https://www.youtube.com/shorts/' + p.id
+                        : 'https://www.youtube.com/watch?v=' + p.id;
+    }
+    return item.url || item.src;
+  }
+
+  function frame(src, title, scroll) {
+    var f = document.createElement('iframe');
+    f.src = src;
+    f.title = title;
+    f.loading = 'lazy';
+    f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    f.setAttribute('allowfullscreen', '');
+    f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+    if (!scroll) f.setAttribute('scrolling', 'no');
+    return f;
   }
 
   TRAVEL.forEach(function (item) {
+    var p = parse(item);
+    var title = item.title || FALLBACK[p.kind];
+
     var card = document.createElement('article');
-    card.className = 'tv-card';
+    card.className = 'tv-card' + (p.portrait ? ' is-portrait' : '');
 
     var media = document.createElement('div');
     media.className = 'tv-media';
 
-    var img = document.createElement('img');
-    img.src = thumb(item);
-    img.alt = item.title || FALLBACK_TITLE[item.kind];
-    img.loading = 'lazy';
-    if (item.kind === 'photo') { img.className = 'tv-photo'; img.dataset.full = item.src; }
-    img.addEventListener('error', function () { img.src = placeholder(LABEL[item.kind] || 'Video'); });
-    media.appendChild(img);
+    /* Instagram hands out no thumbnail without an API key, so unless a poster
+       is supplied the card shows Instagram's own embed — loaded only once it
+       scrolls into view, so the page does not pay for it up front. */
+    var useLiveEmbed = p.kind === 'instagram' && !item.poster;
+
+    if (useLiveEmbed) {
+      card.classList.add('is-embed');
+      var mount = function () {
+        media.appendChild(frame(embedSrc(item, p), title, true));
+      };
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (rows) {
+          rows.forEach(function (r) { if (r.isIntersecting) { mount(); io.disconnect(); } });
+        }, { rootMargin: '200px' });
+        io.observe(media);
+      } else { mount(); }
+    } else {
+      var img = document.createElement('img');
+      img.alt = title;
+      img.loading = 'lazy';
+      if (p.kind === 'photo') {
+        img.src = item.src; img.className = 'tv-photo'; img.dataset.full = item.src;
+      } else if (item.poster) {
+        img.src = item.poster;
+      } else if (p.kind === 'youtube') {
+        /* shorts have a vertical thumbnail under oardefault; fall back to hq */
+        img.src = 'https://i.ytimg.com/vi/' + p.id + (p.portrait ? '/oardefault.jpg' : '/hqdefault.jpg');
+        img.dataset.fallback = 'https://i.ytimg.com/vi/' + p.id + '/hqdefault.jpg';
+      } else {
+        img.src = placeholder(LABEL[p.kind], p.portrait);
+      }
+      img.addEventListener('error', function () {
+        if (img.dataset.fallback) { img.src = img.dataset.fallback; delete img.dataset.fallback; return; }
+        img.src = placeholder(LABEL[p.kind] || 'Video', p.portrait);
+      });
+      media.appendChild(img);
+
+      if (p.kind !== 'photo') {
+        var play = document.createElement('button');
+        play.type = 'button';
+        play.className = 'tv-play';
+        play.setAttribute('aria-label', 'Play ' + title);
+        play.innerHTML = '<i></i>';
+        play.addEventListener('click', function () {
+          media.textContent = '';
+          media.appendChild(frame(embedSrc(item, p), title, false));
+        });
+        media.appendChild(play);
+      }
+    }
 
     var badge = document.createElement('span');
     badge.className = 'tv-badge';
-    badge.textContent = LABEL[item.kind];
+    badge.textContent = LABEL[p.kind];
     media.appendChild(badge);
-
-    if (item.kind !== 'photo') {
-      var play = document.createElement('button');
-      play.type = 'button';
-      play.className = 'tv-play';
-      play.setAttribute('aria-label', 'Play ' + (item.title || FALLBACK_TITLE[item.kind]));
-      play.innerHTML = '<i></i>';
-      play.addEventListener('click', function () {
-        var frame = document.createElement('iframe');
-        frame.src = embed(item);
-        frame.title = item.title || FALLBACK_TITLE[item.kind];
-        frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-        frame.setAttribute('allowfullscreen', '');
-        frame.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-        media.textContent = '';
-        media.appendChild(frame);
-      });
-      media.appendChild(play);
-    }
 
     var body = document.createElement('div');
     body.className = 'tv-body';
 
     var t = document.createElement('div');
     t.className = 'tv-title';
-    t.textContent = item.title || FALLBACK_TITLE[item.kind];
+    t.textContent = title;
     body.appendChild(t);
 
     if (item.place || item.date) {
-      var m = document.createElement('div');
-      m.className = 'tv-meta';
-      m.textContent = [item.place, item.date].filter(Boolean).join(' · ');
-      body.appendChild(m);
+      var meta = document.createElement('div');
+      meta.className = 'tv-meta';
+      meta.textContent = [item.place, item.date].filter(Boolean).join(' · ');
+      body.appendChild(meta);
     }
 
-    if (item.kind !== 'photo') {
+    if (p.kind !== 'photo') {
       var out = document.createElement('a');
       out.className = 'tv-out';
-      out.href = outbound(item);
+      out.href = outbound(item, p);
       out.target = '_blank';
       out.rel = 'noopener';
-      out.textContent = 'Open on ' + LABEL[item.kind] + ' ↗';
+      out.textContent = 'Open on ' + LABEL[p.kind] + ' ↗';
       body.appendChild(out);
     }
 
