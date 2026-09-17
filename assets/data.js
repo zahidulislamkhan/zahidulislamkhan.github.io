@@ -7,14 +7,54 @@
 
 var SITE = {
   "pages": [
-    { "name": "About",        "href": "about.html",        "desc": "Statistician and data scientist working on population health across South and South-East Asia.", "stat": "Oulu, Finland" },
-    { "name": "Research",     "href": "research.html",     "desc": "Peer-reviewed work on maternal health, hypertension, anaemia and machine learning.", "stat": "7 publications · 97 citations" },
-    { "name": "Conferences",  "href": "conferences.html",  "desc": "Posters and talks at international meetings, from Munich to Oulu.", "stat": "3 presentations" },
-    { "name": "Experience",   "href": "experience.html",   "desc": "Education and professional background, including data management at icddr,b.", "stat": "2004 — present" },
-    { "name": "Volunteering", "href": "volunteering.html", "desc": "Community and service work alongside the research.", "stat": "5 roles" },
-    { "name": "Travel",       "href": "travel.html",       "desc": "Photos and clips from the road — places worth going back to.", "stat": "photos & video" },
-    { "name": "Interests",    "href": "interests.html",    "desc": "Valorant, portraits and doodles: what happens when the analysis stops.", "stat": "beyond research" },
-    { "name": "Contact",      "href": "contact.html",      "desc": "Email, Google Scholar, LinkedIn and ResearchGate.", "stat": "open to collaboration" }
+    {
+      "name": "About",
+      "href": "about.html",
+      "desc": "Statistician and data scientist working on population health across South and South-East Asia.",
+      "stat": "Oulu, Finland"
+    },
+    {
+      "name": "Research",
+      "href": "research.html",
+      "desc": "Peer-reviewed work on maternal health, hypertension, anaemia and machine learning.",
+      "stat": "7 publications · 97 citations"
+    },
+    {
+      "name": "Conferences",
+      "href": "conferences.html",
+      "desc": "Posters and talks at international meetings, from Munich to Oulu.",
+      "stat": "3 presentations"
+    },
+    {
+      "name": "Experience",
+      "href": "experience.html",
+      "desc": "Education and professional background, including data management at icddr,b.",
+      "stat": "2004 — present"
+    },
+    {
+      "name": "Volunteering",
+      "href": "volunteering.html",
+      "desc": "Community and service work alongside the research.",
+      "stat": "5 roles"
+    },
+    {
+      "name": "Travel",
+      "href": "travel.html",
+      "desc": "Photos and clips from the road — places worth going back to.",
+      "stat": "Photos & video"
+    },
+    {
+      "name": "Interests",
+      "href": "interests.html",
+      "desc": "Valorant, portraits and doodles: what happens when the analysis stops.",
+      "stat": "Beyond research"
+    },
+    {
+      "name": "Contact",
+      "href": "contact.html",
+      "desc": "Email, Google Scholar, LinkedIn and ResearchGate.",
+      "stat": "Open to collaboration"
+    }
   ],
   "profile": {
     "name": "Zahidul Islam Khan",
@@ -35,7 +75,7 @@ var SITE = {
   "current": [
     {
       "title": "Environmental inequality & mental health",
-      "note": "geospatial analysis, Northern Finland Birth Cohort 1966"
+      "note": "Geospatial analysis, Northern Finland Birth Cohort 1966"
     },
     {
       "title": "Hypertension across South Asia",
@@ -88,7 +128,7 @@ var SITE = {
   ],
   "skills": [
     {
-      "group": "tools",
+      "group": "Tools",
       "items": [
         "R",
         "Python",
@@ -98,7 +138,7 @@ var SITE = {
       ]
     },
     {
-      "group": "methods",
+      "group": "Methods",
       "items": [
         "Quantile regression",
         "Decomposition analysis",
@@ -106,7 +146,7 @@ var SITE = {
       ]
     },
     {
-      "group": "domain",
+      "group": "Domain",
       "items": [
         "Maternal health",
         "Infectious disease",
@@ -114,7 +154,7 @@ var SITE = {
       ]
     },
     {
-      "group": "data",
+      "group": "Data",
       "items": [
         "Longitudinal data",
         "DHS",
@@ -123,13 +163,13 @@ var SITE = {
     }
   ],
   "interests": [
-    "biostatistics",
-    "longitudinal data",
-    "public health",
-    "maternal & child health",
-    "machine learning",
-    "health informatics",
-    "infectious disease",
+    "Biostatistics",
+    "Longitudinal data",
+    "Public health",
+    "Maternal & child health",
+    "Machine learning",
+    "Health informatics",
+    "Infectious disease",
     "DHS data"
   ],
   "citationsByYear": {
@@ -146,7 +186,7 @@ var SITE = {
       "year": 2024,
       "journal": "Journal of Human Hypertension",
       "tags": [
-        "hypertension",
+        "Hypertension",
         "South Asia"
       ],
       "cited": 20,
@@ -157,7 +197,7 @@ var SITE = {
       "year": 2023,
       "journal": "BMC Women's Health",
       "tags": [
-        "machine learning",
+        "Machine learning",
         "GBV"
       ],
       "cited": 32,
@@ -168,7 +208,7 @@ var SITE = {
       "year": 2023,
       "journal": "Heliyon",
       "tags": [
-        "sustainability"
+        "Sustainability"
       ],
       "cited": 2,
       "url": "https://doi.org/10.1016/j.heliyon.2023.e16434"
@@ -178,8 +218,8 @@ var SITE = {
       "year": 2022,
       "journal": "Clinical Epidemiology and Global Health",
       "tags": [
-        "anemia",
-        "quantile regression"
+        "Anemia",
+        "Quantile regression"
       ],
       "cited": 14,
       "url": "https://doi.org/10.1016/j.cegh.2021.100948"
@@ -189,7 +229,7 @@ var SITE = {
       "year": 2022,
       "journal": "BMJ Open",
       "tags": [
-        "maternal health",
+        "Maternal health",
         "Bangladesh"
       ],
       "cited": 14,
@@ -200,7 +240,7 @@ var SITE = {
       "year": 2022,
       "journal": "Khulna University Studies",
       "tags": [
-        "mental health",
+        "Mental health",
         "COVID-19"
       ],
       "cited": 0,
@@ -211,7 +251,7 @@ var SITE = {
       "year": 2021,
       "journal": "Heliyon",
       "tags": [
-        "reproductive health",
+        "Reproductive health",
         "Albania"
       ],
       "cited": 15,
@@ -224,8 +264,8 @@ var SITE = {
       "title": "Environmental Inequality and Mental Health: A Geospatial Analysis in the Northern Finland Birth Cohort 1966",
       "venue": "6th Paula Rantakallio Symposium on Birth Cohorts and Longitudinal Studies · Oulu, Finland",
       "badges": [
-        "author",
-        "poster"
+        "Author",
+        "Poster"
       ],
       "poster": "assets/conf-rantakallio2026.jpg",
       "url": null
@@ -235,8 +275,8 @@ var SITE = {
       "title": "Discrepancies among self-reported symptoms vs laboratory-based diagnosis of STIs among female sex workers in Jashore, Bangladesh",
       "venue": "25th International AIDS Conference · Munich, Germany",
       "badges": [
-        "co-author",
-        "poster"
+        "Co-author",
+        "Poster"
       ],
       "poster": "assets/conf-aids2024.jpg",
       "url": "https://programme.aids2024.org/Abstract/Abstract/?abstractid=8398"
@@ -246,8 +286,8 @@ var SITE = {
       "title": "Factors affecting depression and stress among tertiary level students during the COVID-19 pandemic",
       "venue": "International Conference on STEM & the 4th Industrial Revolution · Khulna University",
       "badges": [
-        "co-author",
-        "oral"
+        "Co-author",
+        "Oral"
       ],
       "poster": null,
       "url": null
@@ -259,7 +299,7 @@ var SITE = {
       "role": "MHSc in Epidemiology and Biomedical Data Science",
       "org": "University of Oulu · Oulu, Finland",
       "kind": "edu",
-      "badge": "education",
+      "badge": "Education",
       "desc": "Specialising in biostatistics, longitudinal data analysis, and epidemiological methods. Research focus on population health and health data science."
     },
     {
@@ -267,7 +307,7 @@ var SITE = {
       "role": "Data Management Officer",
       "org": "icddr,b · Dhaka, Bangladesh",
       "kind": "work",
-      "badge": "work",
+      "badge": "Work",
       "desc": "Managed data infrastructure for HIV and AIDS research programmes under the Health Systems and Population Studies Division. Worked on data quality, cleaning, and analysis pipelines for large-scale health surveys."
     },
     {
@@ -275,7 +315,7 @@ var SITE = {
       "role": "Data Analyst",
       "org": "TwinBit Limited · Dhaka, Bangladesh",
       "kind": "work",
-      "badge": "work",
+      "badge": "Work",
       "desc": "Data analysis and reporting for an iOS software development company. Built dashboards and analytical reports to support product decisions."
     },
     {
@@ -283,7 +323,7 @@ var SITE = {
       "role": "BSc in Statistics",
       "org": "Khulna University · Khulna, Bangladesh",
       "kind": "edu",
-      "badge": "education",
+      "badge": "Education",
       "desc": "Undergraduate research in biostatistics and applied statistics. Thesis work on maternal and child health using DHS data."
     },
     {
@@ -291,7 +331,7 @@ var SITE = {
       "role": "HSC in Science",
       "org": "Notre Dame College · Dhaka, Bangladesh",
       "kind": "edu",
-      "badge": "education",
+      "badge": "Education",
       "desc": "Higher Secondary Certificate."
     },
     {
@@ -299,7 +339,7 @@ var SITE = {
       "role": "SSC in Science",
       "org": "Dhaka Residential Model College · Dhaka, Bangladesh",
       "kind": "edu",
-      "badge": "education",
+      "badge": "Education",
       "desc": "Secondary School Cerificate."
     }
   ],
@@ -309,7 +349,7 @@ var SITE = {
       "role": "Executive Member",
       "org": "Oulun Arctic Tigers Ry · Oulu, Finland",
       "kind": "vol",
-      "badge": "community",
+      "badge": "Community",
       "desc": "Serving as an executive member of a local association in Oulu, contributing to community organisation and events."
     },
     {
@@ -317,7 +357,7 @@ var SITE = {
       "role": "Organizer — Pitha Utshob",
       "org": "Bangladeshi Cultural Festival · Oulu, Finland",
       "kind": "vol",
-      "badge": "culture",
+      "badge": "Culture",
       "desc": "Organised the Pitha Utshob, a Bangladeshi cultural festival celebrating traditional food and heritage within the Oulu community."
     },
     {
@@ -325,7 +365,7 @@ var SITE = {
       "role": "Volunteer",
       "org": "Colorful Restaurant · Multicultural Centre Villa Victor, Oulu",
       "kind": "vol",
-      "badge": "community",
+      "badge": "Community",
       "desc": "Volunteered at a multicultural community restaurant, supporting intercultural exchange and community integration in Oulu."
     },
     {
@@ -333,7 +373,7 @@ var SITE = {
       "role": "Volunteer",
       "org": "European Public Health Conference · Helsinki, Finland",
       "kind": "conf",
-      "badge": "conference",
+      "badge": "Conference",
       "desc": "Volunteered at the European Public Health Conference in Helsinki, supporting the organisation of one of Europe's leading public health events."
     },
     {
@@ -341,7 +381,7 @@ var SITE = {
       "role": "Volunteer",
       "org": "Oulu Cultural Capital 2026 · Oulu, Finland",
       "kind": "vol",
-      "badge": "culture",
+      "badge": "Culture",
       "desc": "Contributing to Oulu's year as European Capital of Culture 2026, supporting cultural programming and events across the city."
     }
   ]

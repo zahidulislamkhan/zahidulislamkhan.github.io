@@ -12,6 +12,22 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
   function yearOf(s) { var m = String(s).match(/(\d{4})/g); return m ? +m[m.length - 1] : 0; }
+  function slug(s) {
+    return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+  }
+
+  /* open a page on the entry a link pointed at */
+  function gotoHash() {
+    if (!location.hash) return;
+    var t = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (!t) return;
+    for (var n = t; n; n = n.parentElement) {
+      if (n.classList && n.classList.contains('fade-in')) n.classList.add('visible');
+    }
+    t.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    t.classList.add('flash');
+    setTimeout(function () { t.classList.remove('flash'); }, 2200);
+  }
   function ext(u) { return u && u.indexOf('http') === 0 ? ' target="_blank" rel="noopener"' : ''; }
 
   function head(root, tag, title, intro) {
@@ -138,7 +154,7 @@
         '<div class="hero-photo-caption">' + esc(P.name) + '<br>' + esc(P.location) + '</div>' +
       '</div>' +
       '<div>' +
-        '<div class="hero-eyebrow">// ' + esc(P.role.toLowerCase()) + ' <span>▍</span></div>' +
+        '<div class="hero-eyebrow">// ' + esc(P.role) + ' <span>▍</span></div>' +
         '<h1>' + words.map(esc).join('<br>') + '<br><em>' + esc(last) + '</em></h1>' +
         '<p class="hero-bio">' + esc(P.blurb) + '</p>' +
         '<div class="hero-actions">' +
@@ -147,28 +163,51 @@
         '</div>' +
       '</div>' +
       '<div class="hero-stats">' +
-        '<div class="hero-stat"><div class="hero-stat-n">' + P.stats.publications + '<span>+</span></div><div class="hero-stat-l">publications</div></div>' +
-        '<div class="hero-stat"><div class="hero-stat-n">' + P.stats.citations + '</div><div class="hero-stat-l">citations</div></div>' +
-        '<div class="hero-stat"><div class="hero-stat-n">' + P.stats.hindex + '</div><div class="hero-stat-l">h-index</div></div>' +
-        '<div class="hero-stat"><div class="hero-stat-n" style="font-size:17px;padding-top:6px">Oulu<span style="font-size:13px">, FI</span></div><div class="hero-stat-l">based in</div></div>' +
-      '</div>' +
-      '<div class="q-band">' +
-        '<div class="q-plot">' +
-          '<canvas id="q-canvas" role="img" aria-label="Scatter with quantile regression fits at tau 0.25, 0.50 and 0.75; the gap between fits widens as years of education increase."></canvas>' +
-          '<span class="q-lab y">age at first birth</span><span class="q-lab x">years of education →</span>' +
-        '</div>' +
-        '<div class="q-plot-foot">' +
-          '<div class="q-legend"><span><b class="thin"></b>τ = 0.25</span><span><b></b>τ = 0.50</span>' +
-            '<span><b class="thin"></b>τ = 0.75</span><span><b class="band"></b>interquartile band</span></div>' +
-          '<div class="q-note">quantile regression · <a href="https://doi.org/10.1016/j.heliyon.2021.e06547" target="_blank" rel="noopener">Heliyon 2021</a></div>' +
-        '</div>' +
+        '<div class="hero-stat"><div class="hero-stat-n">' + P.stats.publications + '<span>+</span></div><div class="hero-stat-l">Publications</div></div>' +
+        '<div class="hero-stat"><div class="hero-stat-n">' + P.stats.citations + '</div><div class="hero-stat-l">Citations</div></div>' +
+        '<div class="hero-stat"><div class="hero-stat-n">' + P.stats.hindex + '</div><div class="hero-stat-l">H-index</div></div>' +
+        '<div class="hero-stat"><div class="hero-stat-n" style="font-size:17px;padding-top:6px">Oulu<span style="font-size:13px">, FI</span></div><div class="hero-stat-l">Based in</div></div>' +
       '</div>';
     root.appendChild(hero);
 
+    /* recent activity — newest first, three shown */
+    var feedItems = [];
+    S.publications.forEach(function (p) {
+      feedItems.push({ y: p.year, when: String(p.year), cat: 'Publication', tone: 'edu',
+        t: p.title, s: p.journal, page: 'research.html' });
+    });
+    S.conferences.forEach(function (c) {
+      feedItems.push({ y: yearOf(c.date), when: c.date, cat: 'Conference', tone: 'conf',
+        t: c.title, s: c.venue, page: 'conferences.html' });
+    });
+    S.experience.forEach(function (r) {
+      feedItems.push({ y: yearOf(r.date), when: r.date,
+        cat: r.kind === 'edu' ? 'Education' : 'Role', tone: r.kind,
+        t: r.role, s: r.org, key: r.role + ' ' + r.date, page: 'experience.html' });
+    });
+    S.volunteering.forEach(function (r) {
+      feedItems.push({ y: yearOf(r.date), when: r.date, cat: 'Community', tone: r.kind,
+        t: r.role, s: r.org, key: r.role + ' ' + r.date, page: 'volunteering.html' });
+    });
+    feedItems.sort(function (a, b) { return b.y - a.y; });
+
+    var act = el('section', null); act.id = 'activity';
+    head(act, 'Recent', 'Recent <em>updates</em>');
+    var feed = el('div', 'feed fade-in');
+    feed.innerHTML = feedItems.slice(0, 3).map(function (f) {
+      return '<a class="feed-row" href="' + f.page + '#' + slug(f.key || f.t) + '">' +
+        '<div class="feed-when">' + esc(f.when) + '</div>' +
+        '<div><span class="timeline-badge ' + f.tone + ' feed-cat">' + esc(f.cat) + '</span></div>' +
+        '<div><div class="feed-t">' + esc(f.t) + '</div>' +
+        '<div class="feed-s">' + esc(f.s) + '</div></div>' +
+        '<div class="feed-go">→</div></a>';
+    }).join('');
+    act.appendChild(feed);
+    root.appendChild(act);
+
     /* overview */
     var ov = el('section', null); ov.id = 'overview';
-    head(ov, 'explore', 'Where to <em>next</em>',
-      'Every section has its own page. Pick one, or use the bar at the top.');
+    head(ov, 'Explore', 'Where to <em>next</em>');
     var grid = el('div', 'overview-grid fade-in');
     grid.innerHTML = S.pages.map(function (p) {
       return '<a class="ov-card" href="' + esc(p.href) + '">' +
@@ -178,44 +217,11 @@
     }).join('');
     ov.appendChild(grid);
     root.appendChild(ov);
-
-    /* recent activity — everything, newest first */
-    var feedItems = [];
-    S.publications.forEach(function (p) {
-      feedItems.push({ y: p.year, when: String(p.year), cat: 'publication', tone: 'edu',
-        t: p.title, s: p.journal, url: p.url });
-    });
-    S.conferences.forEach(function (c) {
-      feedItems.push({ y: yearOf(c.date), when: c.date, cat: 'conference', tone: 'conf',
-        t: c.title, s: c.venue, url: c.url });
-    });
-    S.experience.concat(S.volunteering).forEach(function (r) {
-      feedItems.push({ y: yearOf(r.date), when: r.date,
-        cat: r.kind === 'edu' ? 'education' : (r.kind === 'vol' ? 'community' : 'role'),
-        tone: r.kind, t: r.role, s: r.org });
-    });
-    feedItems.sort(function (a, b) { return b.y - a.y; });
-
-    var act = el('section', null); act.id = 'activity';
-    head(act, 'activity', 'Recent <em>updates</em>',
-      feedItems.length + ' entries across publications, talks, roles and community work.');
-    var feed = el('div', 'feed fade-in');
-    feed.innerHTML = feedItems.map(function (f) {
-      return '<div class="feed-row">' +
-        '<div class="feed-when">' + esc(f.when) + '</div>' +
-        '<div><span class="timeline-badge ' + f.tone + ' feed-cat">' + f.cat + '</span></div>' +
-        '<div><div class="feed-t">' + (f.url
-            ? '<a href="' + esc(f.url) + '"' + ext(f.url) + '>' + esc(f.t) + ' ↗</a>'
-            : esc(f.t)) + '</div>' +
-          '<div class="feed-s">' + esc(f.s) + '</div></div></div>';
-    }).join('');
-    act.appendChild(feed);
-    root.appendChild(act);
   };
 
   routes.research = function (root) {
     var sec = el('section', null); sec.id = 'research';
-    head(sec, 'research', 'Published <em>work</em>',
+    head(sec, 'Research', 'Published <em>work</em>',
       'Search the titles, journals and tags, or open a paper for its keywords and DOI.');
 
     var pubs = S.publications.slice();
@@ -225,13 +231,13 @@
 
     var bar = el('div', 'pub-filters');
     bar.innerHTML =
-      '<label class="pub-search"><span>//&nbsp;search</span>' +
+      '<label class="pub-search"><span>//&nbsp;Search</span>' +
       '<input id="pub-q" type="search" placeholder="quantile, Albania, machine learning…" ' +
       'aria-label="Search publications" /></label>' +
-      '<select id="pub-year" aria-label="Filter by year"><option value="">all years</option>' +
+      '<select id="pub-year" aria-label="Filter by year"><option value="">All years</option>' +
       years.map(function (y) { return '<option>' + y + '</option>'; }).join('') + '</select>' +
       '<select id="pub-sort" aria-label="Sort publications">' +
-      '<option value="year">newest first</option><option value="cited">most cited</option></select>';
+      '<option value="year">Newest first</option><option value="cited">Most cited</option></select>';
     sec.appendChild(bar);
 
     var line = el('div', 'result-line');
@@ -244,6 +250,7 @@
 
     function card(p) {
       var c = el('div', 'pub-card');
+      c.id = slug(p.title);
       var body = el('div', 'pub-card-body');
       body.innerHTML =
         '<div class="pub-card-header"><div class="pub-title">' + esc(p.title) + '</div>' +
@@ -252,12 +259,12 @@
         p.tags.map(function (t) { return '<span class="pub-tag">' + esc(t) + '</span>'; }).join('') + '</div>';
       c.appendChild(body);
       var cit = el('div', 'pub-cit');
-      cit.innerHTML = '<span class="pub-cit-label">cited by</span>' +
+      cit.innerHTML = '<span class="pub-cit-label">Cited by</span>' +
         '<div class="pub-cit-bar-wrap"><div class="pub-cit-bar" data-pct="' +
         Math.round((p.cited / maxCit) * 100) + '"></div></div>' +
         '<span class="pub-cit-count">' + p.cited + '</span>';
       c.appendChild(cit);
-      addExpand(c, 'details', function (box) {
+      addExpand(c, 'Details', function (box) {
         box.innerHTML = '<h5>KEYWORDS</h5><div class="pub-meta">' +
           p.tags.map(function (t) { return '<span class="pub-tag">' + esc(t) + '</span>'; }).join('') + '</div>' +
           '<p>Published in <strong>' + esc(p.journal) + '</strong>, ' + p.year +
@@ -288,7 +295,7 @@
       }
 
       var shown = rows.reduce(function (n, p) { return n + p.cited; }, 0);
-      line.innerHTML = 'showing <b>' + rows.length + '</b> of <b>' + pubs.length + '</b> papers' +
+      line.innerHTML = 'Showing <b>' + rows.length + '</b> of <b>' + pubs.length + '</b> papers' +
         '<span class="right"><b>' + shown + '</b> citations in view</span>';
       tl.querySelectorAll('.pub-cit-bar').forEach(function (b) { b.style.width = b.dataset.pct + '%'; });
     }
@@ -303,7 +310,7 @@
     var ys = Object.keys(S.citationsByYear);
     var max = Math.max.apply(null, ys.map(function (y) { return S.citationsByYear[y]; }));
     chart.innerHTML = '<div class="cit-chart-header">' +
-      '<span class="cit-chart-title">// citations by year</span>' +
+      '<span class="cit-chart-title">// Citations by year</span>' +
       '<span class="cit-chart-total">' + P.stats.citations + ' total · Google Scholar</span></div>' +
       '<div class="cit-bars">' + ys.map(function (y) {
         var n = S.citationsByYear[y];
@@ -328,11 +335,12 @@
 
   routes.conferences = function (root) {
     var sec = el('section', null); sec.id = 'conferences';
-    head(sec, 'conferences', 'Conference <em>presentations</em>',
+    head(sec, 'Conferences', 'Conference <em>presentations</em>',
       'Posters and talks at international meetings.');
     var tl = el('div', 'timeline fade-in');
     S.conferences.forEach(function (c, i) {
       var card = el('div', 'timeline-card conf-photo-card');
+      card.id = slug(c.title);
       card.innerHTML =
         (c.poster ? '<div class="conf-card-photo"><img src="' + esc(c.poster) +
           '" alt="' + esc(c.title) + ' poster" /></div>' : '') +
@@ -344,7 +352,7 @@
         c.badges.map(function (b) { return '<span class="timeline-badge conf">' + esc(b) + '</span>'; }).join('') +
         '</div></div></div>';
       if (c.url) {
-        addExpand(card, 'abstract', function (box) {
+        addExpand(card, 'Abstract', function (box) {
           box.innerHTML = '<p>' + esc(c.venue) + '</p>' +
             '<a class="detail-link" href="' + esc(c.url) + '" target="_blank" rel="noopener">read abstract ↗</a>';
         });
@@ -361,6 +369,7 @@
     var tl = el('div', 'timeline fade-in');
     S[key].forEach(function (r, i) {
       var card = el('div', 'timeline-card');
+      card.id = slug(r.role + ' ' + r.date);
       card.innerHTML =
         '<div class="timeline-card-header"><div>' +
         '<div class="timeline-date">' + esc(r.date) + '</div>' +
@@ -376,17 +385,17 @@
   }
 
   routes.experience = function (root) {
-    logPage(root, 'experience', 'experience', 'Background &amp; <em>education</em>',
+    logPage(root, 'experience', 'Experience', 'Background &amp; <em>education</em>',
       'Where I have studied and worked.');
   };
   routes.volunteering = function (root) {
-    logPage(root, 'volunteering', 'volunteering', 'Community &amp; <em>service</em>',
+    logPage(root, 'volunteering', 'Volunteering', 'Community &amp; <em>service</em>',
       'Volunteering and organising alongside the research.');
   };
 
   routes.about = function (root) {
     var sec = el('section', null); sec.id = 'about';
-    head(sec, 'about', 'Bridging statistics<br>and <em>public health</em>');
+    head(sec, 'About', 'Bridging statistics<br>and <em>public health</em>');
     var grid = el('div', 'about-grid');
     var leftCol = el('div', 'fade-in');
     S.about.forEach(function (p) { leftCol.appendChild(el('p', null, p)); });
@@ -408,12 +417,12 @@
     var sec = el('section', null); sec.id = 'contact';
     var grid = el('div', 'contact-grid');
     var leftCol = el('div', 'fade-in');
-    leftCol.innerHTML = '<div class="section-tag">contact</div>' +
+    leftCol.innerHTML = '<div class="section-tag">Contact</div>' +
       '<h2>Open to <em>collaboration</em></h2>' +
       '<p>I\'m always interested in collaborative research involving statistical methodologies, ' +
       'public health, or biomedical data science. Feel free to reach out via email or find me ' +
       'on any of the platforms below.</p>' +
-      '<p style="font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:1.5rem">// best reached by email</p>';
+      '<p style="font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:1.5rem">// Best reached by email</p>';
     var rightCol = el('div', 'fade-in');
     var list = el('div', 'contact-links');
     list.innerHTML = S.links.map(function (l) {
@@ -431,72 +440,8 @@
   var name = document.body.dataset.page;
   if (root && routes[name]) routes[name](root);
   reveal();
-
-  /* ── hero plot ─────────────────────────────────────────────────────── */
-  var cv = document.getElementById('q-canvas');
-  if (cv && cv.getContext) {
-    var ctx = cv.getContext('2d');
-    var A = '240,169,59', T = '94,200,192';
-    var PAD = { l: 16, r: 16, t: 34, b: 30 };
-    function mul(a) {
-      return function () {
-        a |= 0; a = a + 0x6D2B79F5 | 0;
-        var t = Math.imul(a ^ a >>> 15, 1 | a);
-        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-        return ((t ^ t >>> 14) >>> 0) / 4294967296;
-      };
-    }
-    var rnd = mul(20260917), pts = [];
-    for (var i = 0; i < 170; i++) {
-      var x = rnd(), g = (rnd() + rnd() + rnd() - 1.5) / 1.5, sd = 0.06 + 0.26 * x;
-      pts.push({ x: x, y: Math.max(0.05, Math.min(0.95, 0.24 + 0.40 * x + g * sd)),
-                 ph: rnd() * 6.283, sp: 0.5 + rnd() });
-    }
-    var TAUS = [{ a: 0.14, b: 0.16, w: 1, o: 0.45 }, { a: 0.24, b: 0.40, w: 2, o: 1 },
-                { a: 0.34, b: 0.60, w: 1, o: 0.45 }];
-    var W = 0, H = 0;
-    function fit() {
-      var dpr = Math.min(window.devicePixelRatio || 1, 2), b = cv.getBoundingClientRect();
-      if (!b.width || !b.height) return false;
-      W = b.width; H = b.height;
-      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      return true;
-    }
-    function X(v) { return PAD.l + v * (W - PAD.l - PAD.r); }
-    function Y(v) { return H - PAD.b - v * (H - PAD.t - PAD.b); }
-    function draw(t) {
-      if (!W || !H) return;
-      ctx.clearRect(0, 0, W, H);
-      ctx.beginPath();
-      ctx.moveTo(X(0), Y(TAUS[2].a)); ctx.lineTo(X(1), Y(TAUS[2].a + TAUS[2].b));
-      ctx.lineTo(X(1), Y(TAUS[0].a + TAUS[0].b)); ctx.lineTo(X(0), Y(TAUS[0].a));
-      ctx.closePath();
-      ctx.fillStyle = 'rgba(' + A + ',0.10)'; ctx.fill();
-      for (var j = 0; j < pts.length; j++) {
-        var p = pts[j], dy = reduce ? 0 : Math.sin(t * 0.0007 * p.sp + p.ph) * (H * 0.012);
-        ctx.beginPath(); ctx.arc(X(p.x), Y(p.y) + dy, 1.9, 0, 6.283);
-        ctx.fillStyle = 'rgba(' + T + ',0.38)'; ctx.fill();
-      }
-      for (var k = 0; k < TAUS.length; k++) {
-        var q = TAUS[k];
-        ctx.beginPath(); ctx.moveTo(X(0), Y(q.a)); ctx.lineTo(X(1), Y(q.a + q.b));
-        ctx.strokeStyle = 'rgba(' + A + ',' + q.o + ')'; ctx.lineWidth = q.w; ctx.stroke();
-      }
-    }
-    var raf = null, live = false;
-    function loop(ts) { draw(ts); raf = requestAnimationFrame(loop); }
-    if (fit()) draw(0);
-    window.addEventListener('resize', function () { if (fit()) draw(performance.now()); });
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (es) {
-        es.forEach(function (e) {
-          if (e.isIntersecting && !live && !reduce) { live = true; raf = requestAnimationFrame(loop); }
-          else if (!e.isIntersecting && live) { cancelAnimationFrame(raf); live = false; }
-        });
-      }, { threshold: 0.05 }).observe(cv);
-    } else if (!reduce) { raf = requestAnimationFrame(loop); }
-  }
+  gotoHash();
+  window.addEventListener('hashchange', gotoHash);
 
   /* ── hero stat counters ────────────────────────────────────────────── */
   if (!reduce && 'IntersectionObserver' in window) {
