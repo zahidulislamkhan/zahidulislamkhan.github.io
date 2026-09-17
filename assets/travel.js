@@ -57,8 +57,8 @@ var TRAVEL = [
   function placeholder(label) {
     var svg =
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">' +
-      '<rect width="320" height="180" fill="%23F3F5FB"/>' +
-      '<text x="160" y="164" text-anchor="middle" fill="%238A9099" ' +
+      '<rect width="320" height="180" fill="%23F2F4F6"/>' +
+      '<text x="160" y="164" text-anchor="middle" fill="%23939CA4" ' +
       'font-family="monospace" font-size="12">' + label + ' — add a poster image</text></svg>';
     return 'data:image/svg+xml;charset=utf-8,' + svg;
   }
@@ -156,4 +156,7 @@ var TRAVEL = [
     card.appendChild(body);
     grid.appendChild(card);
   });
+
+  var count = document.getElementById('tv-count');
+  if (count) count.textContent = TRAVEL.length + (TRAVEL.length === 1 ? ' entry' : ' entries');
 })();
