@@ -8,28 +8,29 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #111009;
-      --bg2:      #181408;
-      --bg3:      #1E1A0E;
-      --border:   rgba(255,255,255,0.05);
-      --border2:  rgba(255,255,255,0.10);
-      --purple:   #E8A020;
-      --purple2:  #F0B84A;
-      --purple3:  rgba(232,160,32,0.10);
-      --purple4:  rgba(232,160,32,0.05);
-      --text:     #FAF6EC;
-      --muted:    #6B5B42;
-      --muted2:   #C4AA88;
-      --green:    #E8A020;
-      --axis:     rgba(232,160,32,0.30);
-      --mono:     'IBM Plex Mono', monospace;
-      --serif:    'Fraunces', serif;
-      --sans:     'Outfit', sans-serif;
+      --bg:       #FAFAF8;
+      --bg2:      #FFFFFF;
+      --bg3:      #F3F5FB;
+      --border:   #E7E7E2;
+      --border2:  #D2D4CD;
+      --purple:   #1B4DE4;
+      --purple2:  #1740B8;
+      --purple3:  rgba(27,77,228,0.07);
+      --purple4:  rgba(27,77,228,0.04);
+      --text:     #14161A;
+      --muted:    #61666E;
+      --muted2:   #3C4149;
+      --green:    #1B4DE4;
+      --hi:       #F5A524;
+      --axis:     rgba(27,77,228,0.32);
+      --mono:     'IBM Plex Mono', ui-monospace, monospace;
+      --serif:    'Familjen Grotesk', system-ui, sans-serif;
+      --sans:     'Familjen Grotesk', system-ui, sans-serif;
     }
 
     html { scroll-behavior: smooth; }
@@ -38,22 +39,12 @@
       background: var(--bg);
       color: var(--text);
       font-family: var(--sans);
-      font-weight: 300;
+      font-weight: 400;
       line-height: 1.7;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* ── Noise overlay ── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.6;
-    }
 
     /* ── Grid lines ── */
     body::after {
@@ -67,7 +58,7 @@
       pointer-events: none;
       z-index: 0;
       mask-image: radial-gradient(ellipse 80% 80% at 50% 0%, black 40%, transparent 100%);
-      opacity: 0.5;
+      opacity: 0.85;
     }
 
     /* ── NAV ── */
@@ -75,7 +66,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(12,12,20,0.85);
+      background: rgba(250,250,248,0.88);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
@@ -103,7 +94,7 @@
 
     .nav-links a {
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 13px;
       color: var(--muted);
       text-decoration: none;
       letter-spacing: 0.08em;
@@ -141,7 +132,7 @@
 
     .section-tag {
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 13px;
       color: var(--purple);
       letter-spacing: 0.14em;
       text-transform: lowercase;
@@ -236,7 +227,7 @@
 
     .hero-photo-caption {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       letter-spacing: 0.08em;
       text-align: center;
@@ -261,20 +252,20 @@
     h1 {
       font-family: var(--serif);
       font-size: clamp(3rem, 7vw, 5.5rem);
-      font-weight: 300;
-      line-height: 1.05;
+      font-weight: 700;
+      line-height: 1.04;
       color: var(--text);
       margin-bottom: 1.5rem;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.035em;
     }
 
     h1 em {
-      font-style: italic;
-      color: var(--purple2);
+      font-style: normal;
+      color: var(--purple);
     }
 
     .hero-bio {
-      font-size: 17px;
+      font-size: 18px;
       color: var(--muted2);
       max-width: 520px;
       line-height: 1.8;
@@ -340,8 +331,8 @@
 
     .hero-stat-n {
       font-family: var(--serif);
-      font-size: 32px;
-      font-weight: 300;
+      font-size: 34px;
+      font-weight: 700;
       color: var(--text);
       line-height: 1;
       margin-bottom: 4px;
@@ -351,7 +342,7 @@
 
     .hero-stat-l {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 13px;
       color: var(--muted);
       letter-spacing: 0.1em;
       text-transform: lowercase;
@@ -368,19 +359,19 @@
     h2 {
       font-family: var(--serif);
       font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-      font-weight: 300;
+      font-weight: 700;
       line-height: 1.2;
       color: var(--text);
       margin-bottom: 1.5rem;
       letter-spacing: -0.01em;
     }
 
-    h2 em { font-style: italic; color: var(--purple2); }
+    h2 em { font-style: normal; color: var(--purple); }
 
     p {
-      font-size: 16px;
+      font-size: 18px;
       color: var(--muted2);
-      line-height: 1.85;
+      line-height: 1.7;
       margin-bottom: 1rem;
     }
 
@@ -402,14 +393,14 @@
 
     .skill-item-label {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       color: var(--purple);
       letter-spacing: 0.06em;
       margin-bottom: 4px;
     }
 
     .skill-item-val {
-      font-size: 13px;
+      font-size: 15px;
       color: var(--muted2);
     }
 
@@ -423,7 +414,7 @@
     /* Connector line between the year dots. Drawn per entry rather than on the
        container so each section gets its own line, running from the first dot's
        centre to the last dot's centre instead of past both ends.
-       34.5px = 10px axis padding + 14px year label + 5px gap + half of the 11px dot. */
+       36.5px = 10px axis padding + 16px year label + 5px gap + half of the 11px dot. */
     .pub-entry::before, .timeline-item::before {
       content: '';
       position: absolute;
@@ -437,10 +428,10 @@
     }
 
     .pub-entry:first-child::before,
-    .timeline-item:first-child::before { top: 34.5px; }
+    .timeline-item:first-child::before { top: 36.5px; }
 
     .pub-entry:last-child::before,
-    .timeline-item:last-child::before { bottom: auto; height: 34.5px; }
+    .timeline-item:last-child::before { bottom: auto; height: 36.5px; }
 
     .pub-entry:first-child:last-child::before,
     .timeline-item:first-child:last-child::before { display: none; }
@@ -468,7 +459,7 @@
 
     .pub-entry-year-label, .timeline-axis-year {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 12px;
       color: var(--purple);
       letter-spacing: 0.06em;
       background: var(--bg);
@@ -530,10 +521,10 @@
 
     .pub-year-badge {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 11px;
       color: var(--purple2);
       background: var(--purple3);
-      border: 1px solid rgba(232,160,32,0.2);
+      border: 1px solid rgba(27,77,228,0.18);
       padding: 3px 7px;
       border-radius: 3px;
       letter-spacing: 0.05em;
@@ -541,7 +532,7 @@
     }
 
     .pub-title {
-      font-size: 14px;
+      font-size: 16px;
       color: var(--text);
       line-height: 1.55;
       margin-bottom: 8px;
@@ -558,14 +549,14 @@
 
     .pub-journal {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 12px;
       color: var(--muted2);
       letter-spacing: 0.02em;
     }
 
     .pub-tag {
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 11px;
       padding: 2px 7px;
       border-radius: 3px;
       background: var(--purple3);
@@ -583,7 +574,7 @@
 
     .pub-cit-label {
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 12px;
       color: var(--muted2);
       letter-spacing: 0.06em;
       white-space: nowrap;
@@ -607,7 +598,7 @@
 
     .pub-cit-count {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 13px;
       color: var(--purple2);
       min-width: 20px;
       text-align: right;
@@ -631,14 +622,14 @@
 
     .cit-chart-title {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 13px;
       color: var(--muted2);
       letter-spacing: 0.1em;
     }
 
     .cit-chart-total {
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 13px;
       color: var(--purple2);
     }
 
@@ -646,7 +637,7 @@
       display: flex;
       align-items: flex-end;
       gap: 6px;
-      height: 70px;
+      height: 110px;
     }
 
     .cit-bar-col {
@@ -672,7 +663,7 @@
 
     .cit-bar-year {
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 11px;
       color: var(--muted2);
       letter-spacing: 0.04em;
     }
@@ -687,7 +678,7 @@
 
     .interest-tag {
       font-family: var(--mono);
-      font-size: 12px;
+      font-size: 13px;
       padding: 7px 16px;
       border-radius: 20px;
       border: 1px solid var(--border2);
@@ -720,7 +711,7 @@
       position: relative;
       width: 130px;
       flex-shrink: 0;
-      background: #0e0c05;
+      background: #EFEFEA;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -753,7 +744,7 @@
 
     .conf-card-photo-placeholder span {
       font-family: var(--mono);
-      font-size: 8px;
+      font-size: 12px;
       color: var(--muted);
       letter-spacing: 0.08em;
       text-align: center;
@@ -784,7 +775,7 @@
 
     .timeline-badge {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: lowercase;
       padding: 4px 10px;
@@ -792,21 +783,21 @@
       flex-shrink: 0;
     }
 
-    .timeline-badge.edu  { background: rgba(232,160,32,0.10); color: #E8A020; border: 1px solid rgba(232,160,32,0.3); }
-    .timeline-badge.work { background: rgba(100,200,140,0.10); color: #5CC896; border: 1px solid rgba(100,200,140,0.25); }
-    .timeline-badge.conf { background: rgba(150,100,255,0.12); color: #B48EFA; border: 1px solid rgba(150,100,255,0.25); }
-    .timeline-badge.vol  { background: rgba(255,120,100,0.10); color: #FF7864; border: 1px solid rgba(255,120,100,0.25); }
+    .timeline-badge.edu  { background: rgba(27,77,228,0.07); color: #1740B8; border: 1px solid rgba(27,77,228,0.22); }
+    .timeline-badge.work { background: rgba(11,110,72,0.08); color: #0B6E48; border: 1px solid rgba(11,110,72,0.22); }
+    .timeline-badge.conf { background: rgba(100,45,180,0.08); color: #642DB4; border: 1px solid rgba(100,45,180,0.22); }
+    .timeline-badge.vol  { background: rgba(176,58,34,0.08); color: #B03A22; border: 1px solid rgba(176,58,34,0.22); }
 
     .timeline-date {
       font-family: var(--mono);
-      font-size: 10px;
+      font-size: 12px;
       color: var(--muted2);
       letter-spacing: 0.05em;
       margin-bottom: 5px;
     }
 
     .timeline-role {
-      font-size: 15px;
+      font-size: 17px;
       font-weight: 400;
       color: var(--text);
       margin-bottom: 4px;
@@ -815,14 +806,14 @@
 
     .timeline-org {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       color: var(--purple);
       margin-bottom: 8px;
       letter-spacing: 0.03em;
     }
 
     .timeline-desc {
-      font-size: 13px;
+      font-size: 15px;
       color: var(--muted2);
       line-height: 1.75;
       border-top: 1px solid var(--border);
@@ -848,7 +839,7 @@
       text-decoration: none;
       color: var(--muted2);
       font-family: var(--mono);
-      font-size: 13px;
+      font-size: 14px;
       letter-spacing: 0.03em;
       transition: background 0.2s, color 0.2s;
     }
@@ -872,7 +863,7 @@
       position: fixed;
       inset: 0;
       z-index: 1000;
-      background: rgba(0,0,0,0.92);
+      background: rgba(18,20,24,0.90);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -937,7 +928,7 @@
 
     .footer-right {
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       color: var(--muted);
       letter-spacing: 0.06em;
     }
@@ -952,6 +943,97 @@
     .fade-in.visible {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    /* ── LIVE QUANTILE PLOT ── */
+    .q-band {
+      grid-column: 1 / -1;
+      margin-top: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .q-plot {
+      position: relative;
+      width: 100%;
+      height: 210px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .q-plot canvas { display: block; width: 100%; height: 100%; }
+
+    .q-lab {
+      position: absolute;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      pointer-events: none;
+    }
+
+    .q-lab.y { left: 14px; top: 12px; }
+    .q-lab.x { right: 14px; bottom: 10px; }
+
+    .q-plot-foot {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 22px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .q-legend { display: flex; flex-wrap: wrap; gap: 16px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .q-legend span { display: inline-flex; align-items: center; gap: 7px; }
+    .q-legend b { display: block; width: 16px; height: 0; border-top: 2px solid var(--purple); }
+    .q-legend b.thin { border-top-width: 1px; opacity: 0.5; }
+    .q-legend b.band { height: 10px; border: 0; background: rgba(27,77,228,0.14); border-radius: 1px; }
+
+    .q-note { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .q-note a { color: var(--purple); text-decoration: none; border-bottom: 1px solid rgba(27,77,228,0.3); }
+    .q-note a:hover { color: var(--purple2); }
+
+    /* ── PUBLICATION SORT ── */
+    .pub-sort { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 1.75rem; }
+
+    .pub-sort .lab {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-right: 4px;
+    }
+
+    .pub-sort button {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      padding: 7px 15px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      border-radius: 20px;
+      transition: color 0.18s, border-color 0.18s, background 0.18s;
+    }
+
+    .pub-sort button:hover { border-color: var(--purple); color: var(--purple); }
+    .pub-sort button[aria-pressed="true"],
+    .pub-sort button[aria-pressed="true"]:hover { background: var(--purple); border-color: var(--purple); color: #fff; }
+    .pub-sort button:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; }
+
+    /* the spine reads as chronology — ranked by citations it no longer is */
+    .pub-entry::before { transition: opacity 0.3s; }
+    .pub-timeline.ranked .pub-entry::before { opacity: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-photo-frame::before, .hero-eyebrow span { animation: none; }
+      .fade-in { opacity: 1; transform: none; transition: none; }
+      .pub-cit-bar, .cit-bar-fill { transition: none; }
     }
 
     /* ── RESPONSIVE ── */
@@ -1054,6 +1136,23 @@
           <div class="hero-stat-l">based in</div>
         </div>
       </div>
+
+      <div class="q-band">
+        <div class="q-plot">
+          <canvas id="q-canvas" role="img" aria-label="Scatter of respondents with quantile regression fits at tau 0.25, 0.50 and 0.75. The gap between the fits widens as years of education increase, so the spread in age at first birth grows with education."></canvas>
+          <span class="q-lab y">age at first birth</span>
+          <span class="q-lab x">years of education →</span>
+        </div>
+        <div class="q-plot-foot">
+          <div class="q-legend">
+            <span><b class="thin"></b>τ = 0.25</span>
+            <span><b></b>τ = 0.50</span>
+            <span><b class="thin"></b>τ = 0.75</span>
+            <span><b class="band"></b>interquartile band</span>
+          </div>
+          <div class="q-note">quantile regression · <a href="https://doi.org/10.1016/j.heliyon.2021.e06547" target="_blank" rel="noopener">Heliyon 2021</a></div>
+        </div>
+      </div>
     </section>
 
     <!-- ABOUT -->
@@ -1125,7 +1224,13 @@
     <section id="research">
       <div class="section-tag">research</div>
       <h2>Published <em>work</em></h2>
- 
+
+      <div class="pub-sort">
+        <span class="lab">order by</span>
+        <button type="button" class="pub-sort-btn" data-key="year" aria-pressed="true">year</button>
+        <button type="button" class="pub-sort-btn" data-key="cited" aria-pressed="false">citations</button>
+      </div>
+
       <div class="pub-timeline fade-in">
  
         <!-- 1: J Human Hypertension 2024 — LEFT -->
@@ -2019,5 +2124,185 @@
     })();
   </script>
 
+
+  <script>
+  (function () {
+    'use strict';
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ── Hero: live quantile regression ───────────────────────────────── */
+    var cv = document.getElementById('q-canvas');
+    if (cv && cv.getContext) {
+      var ctx = cv.getContext('2d');
+      var A = '27,77,228';
+      var PAD = { l: 16, r: 16, t: 34, b: 30 };
+
+      function mulberry32(a) {
+        return function () {
+          a |= 0; a = a + 0x6D2B79F5 | 0;
+          var t = Math.imul(a ^ a >>> 15, 1 | a);
+          t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+          return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+      }
+      var rnd = mulberry32(20260917), pts = [];
+      for (var i = 0; i < 170; i++) {
+        var x = rnd();
+        var g = (rnd() + rnd() + rnd() - 1.5) / 1.5;
+        var sd = 0.06 + 0.26 * x;                        // spread widens with education
+        pts.push({
+          x: x,
+          y: Math.max(0.05, Math.min(0.95, 0.24 + 0.40 * x + g * sd)),
+          ph: rnd() * 6.283,
+          sp: 0.5 + rnd()
+        });
+      }
+      var TAUS = [
+        { a: 0.14, b: 0.16, w: 1, o: 0.45 },
+        { a: 0.24, b: 0.40, w: 2, o: 1 },
+        { a: 0.34, b: 0.60, w: 1, o: 0.45 }
+      ];
+
+      var W = 0, H = 0;
+      function fit() {
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var box = cv.getBoundingClientRect();
+        if (!box.width || !box.height) return false;
+        W = box.width; H = box.height;
+        cv.width = Math.round(W * dpr);
+        cv.height = Math.round(H * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        return true;
+      }
+      function X(v) { return PAD.l + v * (W - PAD.l - PAD.r); }
+      function Y(v) { return H - PAD.b - v * (H - PAD.t - PAD.b); }
+
+      function draw(t) {
+        if (!W || !H) return;
+        ctx.clearRect(0, 0, W, H);
+
+        ctx.beginPath();
+        ctx.moveTo(X(0), Y(TAUS[2].a));
+        ctx.lineTo(X(1), Y(TAUS[2].a + TAUS[2].b));
+        ctx.lineTo(X(1), Y(TAUS[0].a + TAUS[0].b));
+        ctx.lineTo(X(0), Y(TAUS[0].a));
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(' + A + ',0.09)';
+        ctx.fill();
+
+        for (var i = 0; i < pts.length; i++) {
+          var p = pts[i];
+          var dy = reduce ? 0 : Math.sin(t * 0.0007 * p.sp + p.ph) * (H * 0.012);
+          ctx.beginPath();
+          ctx.arc(X(p.x), Y(p.y) + dy, 1.9, 0, 6.283);
+          ctx.fillStyle = 'rgba(' + A + ',0.30)';
+          ctx.fill();
+        }
+
+        for (var k = 0; k < TAUS.length; k++) {
+          var q = TAUS[k];
+          ctx.beginPath();
+          ctx.moveTo(X(0), Y(q.a));
+          ctx.lineTo(X(1), Y(q.a + q.b));
+          ctx.strokeStyle = 'rgba(' + A + ',' + q.o + ')';
+          ctx.lineWidth = q.w;
+          ctx.stroke();
+        }
+      }
+
+      var raf = null, live = false;
+      function loop(ts) { draw(ts); raf = requestAnimationFrame(loop); }
+      function play() { if (!live && !reduce) { live = true; raf = requestAnimationFrame(loop); } }
+      function pause() { if (live) { cancelAnimationFrame(raf); live = false; } }
+
+      if (fit()) draw(0);                                // painted before anything moves
+      window.addEventListener('resize', function () { if (fit()) draw(performance.now()); });
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (es) {
+          es.forEach(function (e) { e.isIntersecting ? play() : pause(); });
+        }, { threshold: 0.05 }).observe(cv);
+      } else { play(); }
+    }
+
+    /* ── Publications: re-order with a FLIP transition ─────────────────── */
+    var tl = document.querySelector('.pub-timeline');
+    var sortBtns = [].slice.call(document.querySelectorAll('.pub-sort-btn'));
+
+    if (tl && sortBtns.length) {
+      var entries = [].slice.call(tl.querySelectorAll('.pub-entry'));
+      entries.forEach(function (en) {
+        var c = en.querySelector('.pub-cit-count');
+        var y = en.querySelector('.pub-year-badge');
+        en.dataset.cited = c ? parseInt(c.textContent, 10) || 0 : 0;
+        en.dataset.year = y ? parseInt(y.textContent, 10) || 0 : 0;
+      });
+
+      // slots are [side, year axis, side]; the card lives in one of the two sides
+      function place(entry, onLeft) {
+        var a = entry.children[0], b = entry.children[2];
+        var card = entry.querySelector('.pub-card');
+        if (!card) return;
+        if (onLeft) {
+          a.appendChild(card); b.textContent = '';
+          a.className = 'pub-entry-left'; b.className = 'pub-entry-empty';
+        } else {
+          b.appendChild(card); a.textContent = '';
+          b.className = 'pub-entry-right'; a.className = 'pub-entry-empty';
+        }
+      }
+
+      sortBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var key = btn.dataset.key;
+          sortBtns.forEach(function (o) { o.setAttribute('aria-pressed', String(o === btn)); });
+          tl.classList.toggle('ranked', key === 'cited');
+
+          var first = new Map();
+          entries.forEach(function (en) { first.set(en, en.getBoundingClientRect().top); });
+
+          entries.sort(function (m, n) {
+            var d = Number(n.dataset[key]) - Number(m.dataset[key]);
+            return d || Number(n.dataset.cited) - Number(m.dataset.cited);
+          });
+          entries.forEach(function (en, i) { tl.appendChild(en); place(en, i % 2 === 0); });
+
+          if (reduce) return;
+          entries.forEach(function (en) {
+            var delta = first.get(en) - en.getBoundingClientRect().top;
+            if (!delta) return;
+            en.animate(
+              [{ transform: 'translateY(' + delta + 'px)' }, { transform: 'none' }],
+              { duration: 460, easing: 'cubic-bezier(.2,.8,.2,1)' }
+            );
+          });
+        });
+      });
+    }
+
+    /* ── Hero stats count up once, when first reached ──────────────────── */
+    if (!reduce && 'IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (rows) {
+        rows.forEach(function (row) {
+          if (!row.isIntersecting) return;
+          io.unobserve(row.target);
+          var el = row.target, node = el.firstChild, end = parseInt(node.nodeValue, 10), t0 = null;
+          function step(ts) {
+            if (t0 === null) t0 = ts;
+            var k = Math.min((ts - t0) / 1000, 1);
+            node.nodeValue = String(Math.round(end * (1 - Math.pow(1 - k, 3))));
+            if (k < 1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        });
+      }, { threshold: 0.6 });
+
+      [].slice.call(document.querySelectorAll('.hero-stat-n')).forEach(function (el) {
+        var node = el.firstChild;
+        if (node && node.nodeType === 3 && !isNaN(parseInt(node.nodeValue, 10))) io.observe(el);
+      });
+    }
+  })();
+  </script>
 </body>
 </html>
