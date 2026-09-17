@@ -224,18 +224,6 @@
     act.appendChild(moreWrap);
     root.appendChild(act);
 
-    /* overview */
-    var ov = el('section', null); ov.id = 'overview';
-    head(ov, 'Explore', 'Where to <em>next</em>');
-    var grid = el('div', 'overview-grid fade-in');
-    grid.innerHTML = S.pages.map(function (p) {
-      return '<a class="ov-card" href="' + esc(p.href) + '">' +
-        '<div class="ov-name">' + esc(p.name) + ' <span>→</span></div>' +
-        '<div class="ov-desc">' + esc(p.desc) + '</div>' +
-        '<div class="ov-stat">' + esc(p.stat) + '</div></a>';
-    }).join('');
-    ov.appendChild(grid);
-    root.appendChild(ov);
   };
 
   routes.research = function (root) {

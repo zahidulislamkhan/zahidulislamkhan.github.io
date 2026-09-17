@@ -941,53 +941,6 @@ footer {
   .pub-cit-bar, .cit-bar-fill, .dc-inner { transition: none; }
 }
 
-
-/* ── HOME OVERVIEW CARDS ── */
-.overview-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(258px, 1fr));
-  gap: 14px;
-  margin-top: 2rem;
-}
-
-.ov-card {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px 22px;
-  text-decoration: none;
-  color: inherit;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  transition: border-color 0.2s, transform 0.18s, box-shadow 0.2s;
-}
-
-.ov-card:hover {
-  border-color: var(--purple);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 26px rgba(240,169,59,0.10);
-}
-
-.ov-card:focus-visible { outline: 2px solid var(--purple); outline-offset: 3px; }
-
-.ov-name {
-  font-family: var(--serif);
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text);
-  letter-spacing: -0.015em;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.ov-name span { color: var(--purple); font-family: var(--mono); font-size: 15px; transition: transform 0.18s; }
-.ov-card:hover .ov-name span { transform: translateX(3px); }
-.ov-desc { font-size: 15px; color: var(--muted2); line-height: 1.55; }
-.ov-stat { font-family: var(--mono); font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
-
 /* ── TRAVEL ── */
 .travel-grid {
   display: grid;
@@ -1089,37 +1042,6 @@ footer {
 }
 
 .tv-out:hover { color: var(--purple2); text-decoration: underline; }
-
-.travel-help {
-  border: 1px dashed var(--border2);
-  border-radius: 10px;
-  padding: 24px 26px;
-  margin-top: 2.5rem;
-  background: var(--bg2);
-}
-
-.travel-help h3 {
-  font-family: var(--serif);
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 8px;
-}
-
-.travel-help p { font-size: 16px; margin-bottom: 0; }
-
-.travel-help pre {
-  font-family: var(--mono);
-  font-size: 12.5px;
-  line-height: 1.75;
-  color: var(--muted2);
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 14px 16px;
-  margin-top: 14px;
-  overflow-x: auto;
-}
 
 /* ── SUB-PAGE HEADER ── */
 .page-intro { font-size: 18px; color: var(--muted2); line-height: 1.7; max-width: 62ch; }
@@ -1266,7 +1188,15 @@ footer {
 .dc-track { overflow: hidden; border-radius: 10px; border: 1px solid var(--border); }
 .dc-inner { display: flex; transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1); }
 .dc-slide { flex: 0 0 100%; min-width: 0; }
-.dc-slide img { width: 100%; height: auto; display: block; cursor: zoom-in; }
+.dc-slide img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  height: auto;
+  object-fit: contain;
+  background: var(--bg3);
+  display: block;
+  cursor: zoom-in;
+}
 
 .dc-controls { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 14px; }
 

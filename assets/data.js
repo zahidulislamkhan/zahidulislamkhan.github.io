@@ -6,56 +6,6 @@
    ──────────────────────────────────────────────────────────────────────── */
 
 var SITE = {
-  "pages": [
-    {
-      "name": "About",
-      "href": "about.html",
-      "desc": "Statistician and data scientist working on population health across South and South-East Asia.",
-      "stat": "Oulu, Finland"
-    },
-    {
-      "name": "Research",
-      "href": "research.html",
-      "desc": "Peer-reviewed work on maternal health, hypertension, anaemia and machine learning.",
-      "stat": "7 publications · 97 citations"
-    },
-    {
-      "name": "Conferences",
-      "href": "conferences.html",
-      "desc": "Posters and talks at international meetings, from Munich to Oulu.",
-      "stat": "3 presentations"
-    },
-    {
-      "name": "Experience",
-      "href": "experience.html",
-      "desc": "Education and professional background, including data management at icddr,b.",
-      "stat": "2004 — present"
-    },
-    {
-      "name": "Volunteering",
-      "href": "volunteering.html",
-      "desc": "Community and service work alongside the research.",
-      "stat": "5 roles"
-    },
-    {
-      "name": "Travel",
-      "href": "travel.html",
-      "desc": "Photos and clips from the road — places worth going back to.",
-      "stat": "Photos & video"
-    },
-    {
-      "name": "Interests",
-      "href": "interests.html",
-      "desc": "Valorant, portraits and doodles: what happens when the analysis stops.",
-      "stat": "Beyond research"
-    },
-    {
-      "name": "Contact",
-      "href": "contact.html",
-      "desc": "Email, Google Scholar, LinkedIn and ResearchGate.",
-      "stat": "Open to collaboration"
-    }
-  ],
   "profile": {
     "name": "Zahidul Islam Khan",
     "user": "zahidul",
