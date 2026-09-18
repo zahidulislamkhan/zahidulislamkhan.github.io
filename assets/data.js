@@ -218,7 +218,8 @@ var SITE = {
         "Poster"
       ],
       "poster": "assets/conf-rantakallio2026.jpg",
-      "url": null
+      "url": "https://ssl.eventilla.com/filebrowser/file?h=EGaWv&f=20260626134309_9e049b5789c23a10efdae4f19b550e8c.pdf",
+      "linkText": "Abstract book ↗"
     },
     {
       "date": "22–26 July 2024",
@@ -229,7 +230,8 @@ var SITE = {
         "Poster"
       ],
       "poster": "assets/conf-aids2024.jpg",
-      "url": "https://programme.aids2024.org/Abstract/Abstract/?abstractid=8398"
+      "url": "https://programme.aids2024.org/Abstract/Abstract/?abstractid=8398",
+      "linkText": "Read abstract ↗"
     },
     {
       "date": "01–04 July 2022",

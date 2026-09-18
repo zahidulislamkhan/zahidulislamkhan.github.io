@@ -366,7 +366,8 @@
       if (c.url) {
         addExpand(card, 'Abstract', function (box) {
           box.innerHTML = '<p>' + esc(c.venue) + '</p>' +
-            '<a class="detail-link" href="' + esc(c.url) + '" target="_blank" rel="noopener">read abstract ↗</a>';
+            '<a class="detail-link" href="' + esc(c.url) + '" target="_blank" rel="noopener">' +
+            esc(c.linkText || 'Read abstract ↗') + '</a>';
         });
       }
       tl.appendChild(entry(TL, [String(yearOf(c.date))], card, i));
