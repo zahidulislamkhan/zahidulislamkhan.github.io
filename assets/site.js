@@ -298,6 +298,7 @@
       });
 
       tl.textContent = '';
+      tl.classList.toggle('ranked', sort === 'cited');
       if (!rows.length) {
         var none = el('div', 'empty-note', 'No publications match “' + q + '”.');
         tl.appendChild(none);
