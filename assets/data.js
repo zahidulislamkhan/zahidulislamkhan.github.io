@@ -242,7 +242,8 @@ var SITE = {
         "Oral"
       ],
       "poster": null,
-      "url": null
+      "url": "https://kus.ku.ac.bd/kustudies/article/view/893/1413",
+      "linkText": "Read paper ↗"
     }
   ],
   "experience": [

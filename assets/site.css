@@ -940,9 +940,7 @@ footer {
 .pub-sort button[aria-pressed="true"]:hover { background: var(--purple); border-color: var(--purple); color: #131820; }
 .pub-sort button:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; }
 
-/* the spine reads as chronology — ranked by citations it no longer is */
 .pub-entry::before { transition: opacity 0.3s; }
-.pub-timeline.ranked .pub-entry::before { opacity: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-photo-frame::before, .hero-eyebrow span { animation: none; }
