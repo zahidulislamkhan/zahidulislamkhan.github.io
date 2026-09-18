@@ -61,7 +61,7 @@ var TRAVEL = [
     return 'data:image/svg+xml;charset=utf-8,' +
       '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + w + ' ' + h + '">' +
       '<rect width="' + w + '" height="' + h + '" fill="%23222B37"/>' +
-      '<text x="' + (w / 2) + '" y="' + (h / 2 + 4) + '" text-anchor="middle" fill="%2397A3B2" ' +
+      '<text x="' + (w / 2) + '" y="' + (h - 16) + '" text-anchor="middle" fill="%2397A3B2" ' +
       'font-family="monospace" font-size="11">' + label + '</text></svg>';
   }
 
@@ -99,6 +99,31 @@ var TRAVEL = [
     return f;
   }
 
+  /* Instagram lays its embed out at a fixed minimum width, so in a narrower
+     card it would clip. Render it at that width and scale the whole frame
+     down to fit instead. */
+  var IG_MIN = 330, EMBEDS = [];
+
+  function fit(box, f) {
+    var w = box.clientWidth, h = box.clientHeight;
+    if (!w || !h) return;
+    if (w >= IG_MIN) {
+      f.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:0';
+      return;
+    }
+    var k = w / IG_MIN;
+    f.style.cssText = 'position:absolute;top:0;left:0;border:0;transform-origin:top left;' +
+      'width:' + IG_MIN + 'px;height:' + (h / k) + 'px;transform:scale(' + k + ')';
+  }
+
+  var refit;
+  window.addEventListener('resize', function () {
+    clearTimeout(refit);
+    refit = setTimeout(function () {
+      EMBEDS.forEach(function (pair) { fit(pair[0], pair[1]); });
+    }, 120);
+  });
+
   TRAVEL.forEach(function (item) {
     var p = parse(item);
     var title = item.title || FALLBACK[p.kind];
@@ -117,7 +142,10 @@ var TRAVEL = [
     if (useLiveEmbed) {
       card.classList.add('is-embed');
       var mount = function () {
-        media.appendChild(frame(embedSrc(item, p), title, true));
+        var f = frame(embedSrc(item, p), title, true);
+        media.appendChild(f);
+        fit(media, f);
+        EMBEDS.push([media, f]);
       };
       if ('IntersectionObserver' in window) {
         var io = new IntersectionObserver(function (rows) {
