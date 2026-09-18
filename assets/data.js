@@ -334,5 +334,27 @@ var SITE = {
       "badge": "Culture",
       "desc": "Contributing to Oulu's year as European Capital of Culture 2026, supporting cultural programming and events across the city."
     }
+  ],
+  "heroStats": [
+    {
+      "value": 7,
+      "suffix": "+",
+      "label": "Publications"
+    },
+    {
+      "value": 90,
+      "suffix": "+",
+      "label": "Citations"
+    },
+    {
+      "value": 3,
+      "suffix": "+",
+      "label": "Years experience"
+    },
+    {
+      "text": "Oulu",
+      "note": ", FI",
+      "label": "Based in"
+    }
   ]
 };

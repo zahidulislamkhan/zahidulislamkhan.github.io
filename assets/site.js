@@ -163,10 +163,15 @@
         '</div>' +
       '</div>' +
       '<div class="hero-stats">' +
-        '<div class="hero-stat"><div class="hero-stat-n">' + P.stats.publications + '<span>+</span></div><div class="hero-stat-l">Publications</div></div>' +
-        '<div class="hero-stat"><div class="hero-stat-n">' + P.stats.citations + '</div><div class="hero-stat-l">Citations</div></div>' +
-        '<div class="hero-stat"><div class="hero-stat-n">' + P.stats.hindex + '</div><div class="hero-stat-l">H-index</div></div>' +
-        '<div class="hero-stat"><div class="hero-stat-n" style="font-size:17px;padding-top:6px">Oulu<span style="font-size:13px">, FI</span></div><div class="hero-stat-l">Based in</div></div>' +
+        S.heroStats.map(function (st) {
+          var n = st.text != null
+            ? '<div class="hero-stat-n" style="font-size:17px;padding-top:6px">' + esc(st.text) +
+              '<span style="font-size:13px">' + esc(st.note || '') + '</span></div>'
+            : '<div class="hero-stat-n">' + st.value +
+              (st.suffix ? '<span>' + esc(st.suffix) + '</span>' : '') + '</div>';
+          return '<div class="hero-stat">' + n +
+            '<div class="hero-stat-l">' + esc(st.label) + '</div></div>';
+        }).join('') +
       '</div>';
     root.appendChild(hero);
 
