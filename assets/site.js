@@ -155,7 +155,8 @@
       '</div>' +
       '<div>' +
         '<div class="hero-eyebrow">// ' + esc(P.role) + ' <span>▍</span></div>' +
-        '<h1>' + words.map(esc).join('<br>') + '<br><em>' + esc(last) + '</em></h1>' +
+        '<h1><span class="given">' + esc(words.join(' ')) + '</span><br><em>' +
+          esc(last) + '</em></h1>' +
         '<p class="hero-bio">' + esc(P.blurb) + '</p>' +
         '<div class="hero-actions">' +
           '<a href="research.html" class="btn-primary">View research →</a>' +
